@@ -1,0 +1,35 @@
+{% extends "../base.html" %}
+{% block title %}Edit Addresses{% endblock %}
+
+{% block content %}
+<div class="col-6 mx-auto">
+  <h1 class="h3">Create/Edit Address</h1>
+  <div>Add a new delivery <b>address</b> and delivery preferences</div>
+  <hr />
+  <form name="selling_form" class="account-form" method="post" enctype="multipart/form-data">
+    {% if form.errors %}
+    <div class="alert alert-primary" role="alert">
+      Error: Please try again!
+    </div>
+    {% endif %}
+    {{ sell_form.as_p }}
+    {% csrf_token %}
+    <button class="btn btn-primary btn-block py-2 mb-4 mt-4 fw-bold w-100" type="button" value="Submit" onclick="submitForm()">
+    add book 
+    </button>
+  </form>
+
+
+</div>
+
+<script> 
+function submitForm() {
+   var form = document.getElementsByName('selling_form')[0];
+   form.submit(); // Submit the form
+   form.reset();  // Reset all form data
+   return false; // Prevent page refresh
+}
+
+</script>
+
+{% endblock %}

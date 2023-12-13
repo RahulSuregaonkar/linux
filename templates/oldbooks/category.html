@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block content%}
+
+<div id = "wrapper">
+    
+    <div id="filter">
+      <div class="a" style="font-size: 16px" id="filter_head">
+        <strong>FILTERS</strong>
+      </div>
+      
+      <div class="box">
+
+        <label class="container"
+            ><strong><div class="pb-3 h5">{{category.name|title}}</div></strong></label>
+
+  
+        </div>
+  
+        <div class="box">
+          <p><strong>CATEGORIES</strong></p>
+  
+          {% for c in categoriess %}
+
+
+          <label class="container" {% if categoriess.slug == c.slug %}class="selected" {% endif %}
+            ><a class="" href="{{ c.get_absolute_url }}">{{ c.name|title }}</a>
+            <span></span></label
+          >
+          {% endfor %}
+  
+  
+        </div>
+  
+  
+
+      </div> 
+
+      <div class = "products" id = "container">
+        {% if products|length == 0 %}
+
+        <h3>  oopsss !!! There are no Products</h3>
+        {% endif %}
+
+        {% for product in products %} 
+        
+        <div class = 'conatiner' style ="cursor: pointer;"   >
+
+          <a href="{{ product.get_absolute_url }}"><img class= 'img-fluid' src="{{ product.image1.url }}" alt="{{ image.image.alt_text }}" ></a>
+
+        <div class = "contentBox">
+        
+        
+        <h4>{{ product.selling_prod.product.title }}</h4>
+        <div class = "mixbox">
+          
+        <p>₹{{ product.discount_price}}</p>
+        <p>{{ product.tag }}</p>
+          <p class = "strikep">₹{{product.regular_price}}</p>
+          <p class = "offerp">({{product.discount_percentage}}% OFF)</p>
+              
+    
+            </div>
+            <p>{{ product.selling_user.user.name }}</p>
+
+
+            </div>
+                  
+        </div> 
+        {% endfor %}  
+      </div>  
+    
+        
+        
+        
+        
+        
+        
+    
+      </div>
+      <div class="py-4">
+        <nav aria-label="Page navigation example">
+          {% if products.has_other_pages %}
+          <ul class="pagination">
+            {% if product.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+            {% if products.number == l %}
+            <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+            {% endif %}
+          </ul>
+          {% endif %}
+        </nav>
+      </div>
+</div>
+
+<style>
+  .box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Container styles */
+  .container {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  /* Checkbox styles */
+  .container input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  /* Hover effect on label */
+  .container label:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Style for checked checkbox */
+  .container input:checked + label {
+    font-weight: bold;
+  }
+  
+  /* Style for price range */
+  .container {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Style for the text */
+  .container label {
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  /* Add some spacing between price range and text */
+  .container label::before {
+    content: '|';
+    margin-right: 10px;
+    color: #555;
+  }
+
+</style>
+
+
+
+
+{% endblock content %}

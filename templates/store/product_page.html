@@ -1,0 +1,386 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}BookStore{% endblock title %}
+{% block content%}
+<head>
+  <link rel="stylesheet"  href="{% static '/css/product_page.css' %}">
+</head>
+<body>
+<div id="wrapper">
+    <div id="filter">
+      <div>
+        <form method="post" action="{% url 'store:all_products_in_product_page' %}">
+          {% csrf_token %}
+        <div class="">
+          </div>
+    
+          <div class="box">
+            <p><strong>CATEGORIES</strong></p>
+            {% for c in categories %}
+            <div>
+              <label id ="nissan" class="container" {% if category.slug == c.slug %} class="selected" {% endif %}
+                >
+                <input id="{{ c.id }}" type="checkbox" value="{{ c.id }}" /><a class="{{ c.name|title }}">{{ c.name|title }}</a>
+                </label
+              >
+            </div>
+            {% endfor %}
+          </div>
+        </form>
+      </div>
+        
+        <div class="box">
+          <form  method="post" action="{% url 'store:all_products_in_product_page' %}">
+            {% csrf_token %}
+            <p><strong>PRICE RANGE</strong></p>
+
+            <label class="conatiner">
+                <input type="range" id="priceRange" min="{{ min }}" max="{{ max }}" step="0.01" oninput="Priceinput.value=this.value" value="{{ max }}"/>
+                Rs. {{min}} to Rs. {{max}}
+                <input type="number" id="Priceinput" class="form-control" min="{{ min }}" max="{{ max }}" onkeyup="priceRange.value=this.value" value="{{ max }}">
+            </label>
+        </form>
+      </div>
+        <form  method="post" action="{% url 'store:all_products_in_product_page' %}">
+          <div id="discount" class="box">
+            <p><strong>DISCOUNT RANGE</strong></p>
+    
+            <label class="container"
+              ><input id="ten" type="checkbox" value="10" />10% and above</label
+            >
+    
+            <label class="container"
+              ><input id="twenty" type="checkbox" value="20" />20% and
+              above</label
+            >
+    
+            <label class="container"
+              ><input id="thirty" type="checkbox" value="30" />30% and
+              above</label
+            >
+    
+            <label class="container"
+              ><input id="fourty" type="checkbox" value="40" />40% and
+              above</label
+            >
+    
+            <label class="container"
+              ><input id="fifty" type="checkbox" value="50" />50% and
+              above</label
+            >
+    
+            <label class="container"
+              ><input id="sixty" type="checkbox" value="60" />60% and
+              above</label
+            >
+    
+            <label class="container"
+              ><input id="seventy" type="checkbox" value="70" />70% and
+              above</label
+            >
+            
+          </div>
+          <div class="box">
+            
+            <div id="Author">
+              <p><strong>Authors</strong></p>
+              
+              {% for author in authors %}
+              <label >
+                  <br>
+                  <input id="author1" type="checkbox" value="{{ author }}" /> {{ author }}
+                  <br>
+                </label
+              >
+              {% endfor %}
+              
+            </div>
+            <!-- Add more authors as needed -->
+            <div id="Languages" class="">
+              <p><strong>Languages</strong></p>
+          
+              <label class="container">
+                <input id="english" type="checkbox" value="English" />English
+                </label
+              >
+          
+              <label class="container">
+                <input id="spanish" type="checkbox" value="Spanish" />Spanish
+                </label
+              >
+          
+              <label class="container">
+                <input id="french" type="checkbox" value="French" />French
+                </label
+              >
+            </div>
+          </div>
+        </form>  
+      </div> 
+
+      <div class = "products" id = "container">
+        {% if products|length == 0 %}
+
+        <h3>  oopsss !!! There are no Products</h3>
+        {% endif %}
+        
+        {% for product in products %} 
+        
+        <div class = 'conatiner' style ="cursor: pointer;">
+          {% for image in product.product_image.all %}
+          {% if image.is_feature %}
+                 
+          <a href="{{ product.get_absolute_url }}"><img class= 'img-fluid' src="{{ image.image.url }}" alt="{{ image.image.alt_text }}" ></a>
+          {% endif %}
+          {% endfor %}
+        
+        <div class = "contentBox">
+        
+              
+              
+        
+        <h4>{{ product.title }}</h4>
+        <div class = "mixbox">
+        <h4>₹{{ product.discount_price }}</h4>
+          <h4 class = "strikep">₹{{product.regular_price}}</h4>
+          <h6 class = "offerp">({{product.discount_percentage}}% OFF)</h6>
+              
+    
+            </div>
+            <p>{{ product.author  }}</p>
+
+
+            </div>
+                  
+        </div> 
+        {% endfor %}  
+      </div> 
+      </div>
+      <div class="py-4">
+        <nav aria-label="Page navigation example">
+          {% if products.has_other_pages %}
+          <ul class="pagination">
+            {% if product.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+            {% if products.number == l %}
+            <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+            {% endif %}
+          </ul>
+          {% endif %}
+        </nav>
+      </div>
+</div>
+<style>
+  /* Add this CSS for mobile view */
+  @media only screen and (max-width: 700px) {
+    #filter {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: calc(100% - 70px); /* Adjusted height to leave 70px at the bottom */
+        background-color: white;
+        z-index: 1;
+        overflow-x: hidden;
+        transition: 0.5s;
+        box-sizing: border-box;
+        padding: 20px;
+    }
+
+    #filter.show {
+      display:grid;
+
+    }
+
+    #wrapper {
+        transition: margin-left 0.5s;
+    }
+
+    #mobile-filter-link {
+        display: inline-block;
+        cursor: pointer;
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        font-size: 20px;
+        z-index: 2;
+    }
+  }
+</style>
+
+<script>
+  function updateProductLayout() {
+    if (window.innerWidth <= 768) {
+      // On mobile view, display only 2 products in a row
+      const products = document.querySelectorAll('.products .conatiner');
+      products.forEach((product, index) => {
+        if (index % 2 === 0) {
+          product.style.clear = 'both';
+        }
+      });
+    } else {
+      // On larger screens, reset the layout
+      const products = document.querySelectorAll('.products .conatiner');
+      products.forEach((product) => {
+        product.style.clear = 'none';
+      });
+    }
+  }
+
+  // Initial layout update on page load
+  updateProductLayout();
+
+  // Update the layout when the window is resized
+  window.addEventListener('resize', updateProductLayout);
+</script>
+</body>
+<script>
+  $(document).ready(function () {
+    // Define variables to store selected checkbox values
+    var selectedCategories = [];
+    var selectedDiscounts = [];
+    var priceRangeValue;
+    var selectedAuthors = [];
+    var selectedLanguages = [];
+    var selectedNewArrivals = [];
+    // Function to send the data
+    function sendData() {
+        // Update the variables based on checkbox values
+        selectedCategories = $("#nissan input[type='checkbox']:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        selectedDiscounts = $("#discount input[type='checkbox']:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        priceRangeValue = $("#Priceinput").val();
+
+        selectedAuthors = $("#Author input[type='checkbox']:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        selectedLanguages = $("#Languages input[type='checkbox']:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        selectedNewArrivals = $("#NewArrivals input[type='checkbox']:checked").map(function () {
+            return $(this).val();
+        }).get();
+
+        // Create a JSON object to send as data
+        var sendData = {
+            categories: selectedCategories,
+            discountRange: selectedDiscounts,
+            priceRange: priceRangeValue,
+            authors: selectedAuthors,
+            languages: selectedLanguages,
+            newArrivals: selectedNewArrivals,
+            action: "get"
+        };
+
+        // Log the data to the console
+        console.log(sendData);
+
+        // Send the data to the specified URL using AJAX
+        $.ajax({
+          type: "POST",
+          url: "{% url 'store:all_products_in_product_page' %}",
+          data: JSON.stringify(sendData),
+          contentType: "application/json",
+          beforeSend: function (xhr, settings) {
+              xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+          },
+          success: function (response) {
+            // Handle the response here
+            if (response.products) {
+                // Update the products data on your page
+                updateProducts(response.products);
+            }
+            console.log(response.products)
+        },
+          error: function (error) {
+              // Handle any errors here
+          }
+      });function updateProducts(products) {
+        var container = document.getElementById("container");
+        container.innerHTML = "";  // Clear the existing products
+    
+        if (products.length === 0) {
+            container.innerHTML = "<h3>Oops!!! There are no Products</h3>";
+        } else {
+            for (var i = 0; i < products.length; i++) {
+                var product = products[i];
+    
+                // Create a new product container and structure
+                var productDiv = document.createElement("div");
+                productDiv.className = '';
+                productDiv.id = '';  // Set the id attribute to 'products'
+    
+                // Create the product structure based on the provided HTML
+                productDiv.innerHTML = `
+                    <div class='conatiner' style="cursor: pointer;">
+                        <a href="${product.url}">
+                            <img class='img-fluid' src="${product.image_url}" alt="">
+                        </a>
+                        <div class="contentBox">
+                            <h4>${product.title}</h4>
+                            <div class="mixbox">
+                                <p>₹${product.discount_price}</p>
+                                <p></p>
+                                <p class="strikep">₹${product.discount_price}</p>
+
+                                <p class="offerp">(${product.discount_percentage}% OFF)</p>
+                            </div>
+                            <p>${product.author}</p>
+                        </div>
+                    </div>
+                `;
+    
+                // Append the new product container to the main container
+                container.appendChild(productDiv);
+            }
+        }
+    }
+    }
+
+    // Attach a click event handler to the checkboxes and the filter button
+    $(".container input[type='checkbox'], #priceRange, #filterButton").click(sendData);
+
+    // Attach click event handlers to Author, Languages, and New Arrivals checkboxes
+    $("#Author input[type='checkbox']").click(sendData);
+    $("#Languages input[type='checkbox']").click(sendData);
+    $("#New Arrivals input[type='checkbox']").click(sendData);
+});
+
+</script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Add event listener for the menu icon
+    var menuIcon = document.getElementById("menu-icon");
+    var filterDiv = document.getElementById("filter");
+  
+    menuIcon.addEventListener("click", function () {
+      // Toggle the 'open' class to display or hide the filter div
+      filterDiv.classList.toggle("show");
+    });
+  });
+</script>
+<script src="{% static 'JS/scripts.js' %}"></script>
+
+{% endblock content %}

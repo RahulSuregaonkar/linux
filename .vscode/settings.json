@@ -1,0 +1,20 @@
+{
+  "editor.formatOnSave": true,
+  "python.pythonPath": "venv\\Scripts\\python.exe",
+  "python.isortImports.args": [
+    "--profile=black",
+  ],
+  "[python]": {
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    },
+    "editor.defaultFormatter": "ms-python.autopep8"
+  },
+  // Django Extension
+  "files.associations": {
+    "**/*.html": "html",
+    "**/templates/**/*.html": "django-html",
+    "**/templates/**/*": "django-txt",
+    "**/requirements{/**,*}.{txt,in}": "pip-requirements"
+  },
+}

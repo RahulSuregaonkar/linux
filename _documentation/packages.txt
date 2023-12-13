@@ -1,0 +1,11 @@
+packages list
+
+django
+black
+isort
+django-mptt
+pillow
+stripe
+coverage
+six
+django-countries

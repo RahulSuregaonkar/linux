@@ -1,0 +1,229 @@
+.box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Container styles */
+  .container {
+    display: block;
+    margin-bottom: 10px;
+  }
+  
+  /* Checkbox styles */
+  .container input[type="checkbox"] {
+    margin-right: 10px;
+  }
+  
+  /* Hover effect on label */
+  .container label:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Style for checked checkbox */
+  .container input:checked + label {
+    font-weight: bold;
+  }
+  
+  /* Style for price range */
+  .container {
+    display: flex;
+    align-items: center;
+  }
+  
+  /* Style for the text */
+  .container label {
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  /* Add some spacing between price range and text */
+  .container label::before {
+    content: '|';
+    margin-right: 10px;
+    color: #555;
+  }
+
+  .range-label {
+    font-weight: bold;
+  }
+  .range-input {
+      width: 100%;
+      appearance: none;
+      background: linear-gradient(to right, #007BFF, #007BFF);
+      height: 8px;
+      border-radius: 5px;
+      outline: none;
+  }
+  .range-input::-webkit-slider-thumb {
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      background: #007BFF;
+      border-radius: 50%;
+      cursor: pointer;
+  }
+  /* Common styles for both desktop and mobile */
+  .box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .container {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  .container input[type="checkbox"] {
+    margin-right: 10px;
+  }
+
+  .container label:hover {
+    background-color: #f0f0f0;
+  }
+
+  .container input:checked + label {
+    font-weight: bold;
+  }
+
+  .container label {
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  /* Style for price range */
+  .container {
+    display: flex;
+    align-items: center;
+  }
+
+  .container label {
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .container label::before {
+    content: '|';
+    margin-right: 10px;
+    color: #555;
+  }
+
+  .range-label {
+    font-weight: bold;
+  }
+
+  .range-input {
+    width: 100%;
+    appearance: none;
+    background: linear-gradient(to right, #007BFF, #007BFF);
+    height: 8px;
+    border-radius: 5px;
+    outline: none;
+  }
+
+  .range-input::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: #007BFF;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  /* Mobile-specific styles using media queries */
+  @media (max-width: 768px) {
+    .container {
+      font-size: 14px; /* Reduce font size for mobile */
+    }
+  
+    .box {
+      padding: 10px; /* Reduce padding for mobile */
+      margin-bottom: 10px;
+    }
+  
+    .container input[type="checkbox"] {
+      margin-right: 5px; /* Reduce spacing for mobile */
+    }
+  
+    .container {
+      font-size: 14px; /* Reduce font size for mobile */
+    }
+  
+    .container label::before {
+      content: '|';
+      margin-right: 5px; /* Reduce spacing for mobile */
+      color: #555;
+    }
+  
+    .range-label {
+      font-size: 14px;
+    }
+  
+    .range-input {
+      height: 6px;
+    }
+  
+    .range-input::-webkit-slider-thumb {
+      width: 12px;
+      height: 12px;
+    }
+  
+    .box p {
+      font-size: 14px; /* Reduce font size for mobile */
+    }
+  
+    /* Increase spacing between product items for better touch interaction */
+    .conatiner {
+      margin-bottom: 20px;
+    }
+  
+    /* Style for pagination */
+    .pagination {
+      margin-top: 20px;
+    }
+  
+    .products {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-gap: 10px; /* Add some spacing between product items */
+    }
+  
+    .conatiner {
+      margin-bottom: 10px;
+    }
+  
+    .contentBox {
+      padding: 10px;
+    }
+  
+    .img-fluid {
+      max-width: 100%; /* Ensure images fit within the screen width */
+      height: auto;
+    }
+  
+    h4 {
+      font-size: 16px; /* Increase the heading size for better readability */
+    }
+  
+    .mixbox {
+      display: flex;
+      flex-direction: column;
+    }
+  
+    .strikep {
+      text-decoration: line-through;
+    }
+  
+    .offerp {
+      color: #e74c3c; /* Adjust the color for the discount percentage */
+    }
+    @media (max-width: 768px)
+    .header .header-1 .search-form.active {
+      /* top: 65%; */
+    }
+  }

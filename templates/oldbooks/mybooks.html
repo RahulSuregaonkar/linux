@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}BookStore{% endblock title %}
+{% block content%}
+
+{% if messages %}
+<div class="alert alert-warning" alert-"{{ message.tags }}" role="alert">
+{% for message in messages  %}
+{{message|safe}}.
+{% endfor %}
+</div>
+{% endif %}
+
+
+<div class="position-absolute top-50 start-50 col-12"><h2>My Selling Books</h2></div>
+
+<div id = "wrapper">
+
+
+      <div class = "products" id = "container">
+        
+        {% if products|length == 0 %}
+
+        <h3>  oopsss !!! There are no Products</h3>
+        {% endif %}
+
+        {% for product in products %} 
+        
+        <div class = 'conatiner' style ="cursor: pointer;"   >
+
+          <a href="{{ product.get_absolute_url }}"><img class= 'img-fluid' src="{{ product.image1.url }}" alt="{{ image.image.alt_text }}" ></a>
+
+        <div class = "contentBox">
+        
+        
+        <h4>{{ product.selling_prod.product.title }}</h4>
+
+        <div class = "mixbox">
+          
+        <p>₹{{ product.discount_price}}</p>
+        
+        <p>{{ product.tag }}</p>
+          <p class = "strikep">₹{{product.regular_price}}</p>
+          <p class = "offerp">({{product.discount_percentage}}% OFF)</p>
+              
+    
+            </div>
+            <p>{{ product.selling_user.user.name }}</p>
+            <a type="button" class="btn btn-primary fw500 btn-sm" href="{% url 'sellbook:edit_books' product.id %}">edit</a>
+            <a type="button" class="btn btn-danger fw500 btn-sm" href="{% url 'sellbook:delete_books' product.id %}">delete</a>
+
+            </div>
+                  
+        </div> 
+        {% endfor %}  
+      </div>  
+    
+        
+        
+        
+        
+        
+        
+    
+      </div>
+      <div class="py-4">
+        <nav aria-label="Page navigation example">
+          {% if products.has_other_pages %}
+          <ul class="pagination">
+            {% if product.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.previous_page_number }}">Previous</a>
+            </li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+            {% endif %}
+            {% for num in products.paginator.page_range %}
+            {% if products.number == l %}
+            <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+            </li>
+            {% else %}
+            <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+            {% endfor %}
+            {% if products.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ products.next_page_number }}">Next</a></li>
+            {% else %}
+            <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+            {% endif %}
+          </ul>
+          {% endif %}
+        </nav>
+    
+</div>
+
+
+
+{% endblock content %}

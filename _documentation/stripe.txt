@@ -1,0 +1,7 @@
+No auth: 4242424242424242
+
+Auth: 4000 0027 6000 3184
+
+Error: 4000000000009995
+
+stripe listen --forward-to localhost:8000/checkout/payment_selection/webhook/

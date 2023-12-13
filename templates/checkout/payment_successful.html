@@ -1,0 +1,41 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}Payment Successful{%endblock %}
+{% block content %}
+
+<div class="container">
+  <div class="col-12">
+    <h1 class="h2">Payment Successful</h1>
+  </div>
+  <div class="col-12">
+    <p>For Order Summary click below button</p>
+  </div>
+  <hr />
+  <div class="col-12">
+    <button class="button"><a href="{% url 'account:user_orders' %}">View all orders</a></button>
+  </div>
+</div>
+<style>
+  .button {
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #87CEFA; /* Light Blue */
+    border: 2px solid #87CEFA;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.button:hover {
+    background-color: #f2f2f2;
+    border-color: #d9d9d9;
+    color: #000000;
+}
+</style>
+
+{% endblock %}

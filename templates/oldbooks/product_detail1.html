@@ -1,0 +1,404 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{% if product %}{{ product.title }}
+{% else %}
+Product detail 
+{% endif %}
+
+{% endblock title %}
+{% block content %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style1.css' %}"> 
+</head>
+<body>
+<section class="py-5">
+    
+    <div class="container">
+        
+        <div class="col-md-6 border-end">	
+            <div class="d-flex flex-column justify-content-center">
+
+                <div class="main_image">	
+                    <img src="{{ product.image1.url }}" id="main_product_image" width="350">	
+                </div>
+                
+                <div class="thumbnail_images">
+
+                    <ul id="thumbnail">	
+                        <li><img onclick="changeImage(this)" src="{{ product.image2.url }}" width="70"></li>
+
+                        <li><img onclick="changeImage(this)" src="{{ product.image3.url }}" width="70"></li>
+
+                        <li><img onclick="changeImage(this)" src="{{ product.image1.url }}" width="70"></li>
+                    </ul>
+
+                </div>	
+            </div>	
+        </div>	
+        <main class="col-lg-6">
+          <div class="ps-lg-3">
+            <h2 class="title text-dark">
+                {{ product.selling_prod.product.title }}
+                <h4>{{ product.selling_prod.product.author }}</h4>
+ 
+            </h2>
+            <h3 class = "title">
+                sold by <h2>{{ product.selling_user.user.name }}</h2>
+  
+            </h3>
+            <div class="mb-3">
+                <br>
+                <div> 
+                    <p class="rating-text">{{ average_rating|floatformat:2  }} / 5 </p>
+                    <br>
+                    
+                    <span>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 0.5 %}-o{% elif average_rating >= 0.5 and average_rating < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 1.5 %}-o{% elif average_rating >= 1.5 and average_rating < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 2.5 %}-o{% elif average_rating >= 2.5 and average_rating < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 3.5 %}-o{% elif average_rating >= 3.5 and average_rating < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 4.5 %}-o{% elif average_rating >= 4.5 and average_rating < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    </span>
+              </div>
+
+              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i></span>
+              <span class="text-success ms-2">In stock</span>
+            </div>
+  
+            <div class="mb-3">
+              <span class="h3">₹ {{ product.discount_price }} </span><span class="strikep">₹ {{ product.regular_price }} </span>
+              
+              
+              <h2 class = "offerp">({{product.discount_percentage}}% OFF)</>
+              <span class="text-muted">per book</span>
+              <h4>Description by user </h4> 
+              <h4>Quantity: {{ product.quantity }}</h4>
+              
+              <h4>{{ product.description }}<h4>
+
+            </div>
+  
+            <p id="description">
+              <br>
+              {{ product.selling_prod.product.description }}
+              
+            </p>
+            <a id="show-more-link" href="#">Show More</a>
+  
+            <div class="row">
+              <dt class="col-3">Publisher</dt>
+              <dd class="col-9"> CreateSpace Independent Publishing Platform (7 November 2017)</dd>
+  
+              <dt class="col-3">Language</dt>
+              <dd class="col-9">English</dd>
+  
+              <dt class="col-3">ISBN-10</dt>
+              <dd class="col-9">1979508216</dd>
+  
+              <dt class="col-3">Item Weight</dt>
+              <dd class="col-9">272 g</dd>
+
+              <dt class="col-3">Dimensions</dt>
+              <dd class="col-9">17.78 x 0.64 x 25.4 cm</dd>
+
+
+            </div>
+  
+            </div>
+
+            <h4>contact seller to buy</h4>
+            <h5>{{ product.selling_user.user.name }}</h5>
+            <h5> phone number: {{ product.selling_user.user.mobile }}</h5>
+
+            
+  
+        </main>
+
+      </div>
+    </div>
+  </section>
+  <!-- content -->
+  
+
+    
+  </div>
+  <div class="spaces1"></div>
+  
+  <div class="spaces"></div>
+  <br>
+</div>
+</main>
+<br/><br/>
+
+<script>
+    function changeImage(element) {
+    
+      var main_prodcut_image = document.getElementById('main_product_image');
+      main_prodcut_image.src = element.src;
+        
+    
+
+    }
+
+</script>
+<style>
+    .rate {
+        float: left;
+        height: 46px;
+        padding: 0 10px;
+    }
+    .rate:not(:checked) > input {
+        position:absolute;
+        top:-9999px;
+    }
+    .rate:not(:checked) > label {
+        float:right;
+        width:1em;
+        overflow:hidden;
+        white-space:nowrap;
+        cursor:pointer;
+        font-size:30px;
+        color:#ccc;
+    }
+    .rate:not(:checked) > label:before {
+        content: '★ ';
+    }
+    .rate > input:checked ~ label {
+        color: #ffc700;    
+    }
+    .rate:not(:checked) > label:hover,
+    .rate:not(:checked) > label:hover ~ label {
+        color: #deb217;  
+    }
+    .rate > input:checked + label:hover,
+    .rate > input:checked + label:hover ~ label,
+    .rate > input:checked ~ label:hover,
+    .rate > input:checked ~ label:hover ~ label,
+    .rate > label:hover ~ input:checked ~ label {
+        color: #c59b08;
+    }
+    .rate input {
+        display: none;
+    }
+    body{
+
+        background-color: #eee;
+    }
+    
+    .card{
+        
+        background-color: #fff;
+        border: none;
+    }
+    
+    .form-color{
+      
+       background-color: #fafafa;
+    
+    }
+    
+    .form-control{
+    
+        height: 48px;
+        border-radius: 25px;
+    }
+    
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #35b69f;
+        outline: 0;
+        box-shadow: none;
+        text-indent: 10px;
+    }
+    
+    .c-badge{
+        background-color: #35b69f;
+        color: white;
+        height: 20px;
+        font-size: 11px;
+        width: 92px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 2px;
+    }
+    
+    .comment-text{
+        font-size: 13px;
+    }
+    
+    .wish{
+    
+        color:#35b69f;
+    }
+    
+    
+    .user-feed{
+    
+            font-size: 14px;
+            margin-top: 12px;
+    }
+
+    .children form {
+        margin-left: -48px;
+    }
+
+    .children .children form {
+        margin-left: -48px;
+    }
+    
+
+    .rating {
+        --dir: right;
+        --fill: gold;
+        --fillbg: rgba(100, 100, 100, 0.15);
+        --heart: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.328l-1.453-1.313q-2.484-2.25-3.609-3.328t-2.508-2.672-1.898-2.883-0.516-2.648q0-2.297 1.57-3.891t3.914-1.594q2.719 0 4.5 2.109 1.781-2.109 4.5-2.109 2.344 0 3.914 1.594t1.57 3.891q0 1.828-1.219 3.797t-2.648 3.422-4.664 4.359z"/></svg>');
+        --star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
+        --stars: 5;
+        --starsize: 3rem;
+        --symbol: var(--star);
+        --value: 1;
+        --w: calc(var(--stars) * var(--starsize));
+        --x: calc(100% * (var(--value) / var(--stars)));
+        block-size: var(--starsize);
+        inline-size: var(--w);
+        position: relative;
+        padding: 0rem;
+        touch-action: manipulation;
+        -webkit-appearance: none;
+      }
+      [dir="rtl"] .rating {
+        --dir: left;
+      }
+      .rating::-moz-range-track {
+        background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+        block-size: 100%;
+        mask: repeat left center/var(--starsize) var(--symbol);
+      }
+      .rating::-webkit-slider-runnable-track {
+        background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+        block-size: 100%;
+        mask: repeat left center/var(--starsize) var(--symbol);
+        -webkit-mask: repeat left center/var(--starsize) var(--symbol);
+      }
+      .rating::-moz-range-thumb {
+        height: var(--starsize);
+        opacity: 0;
+        width: var(--starsize);
+      }
+      .rating::-webkit-slider-thumb {
+        height: var(--starsize);
+        opacity: 0;
+        width: var(--starsize);
+        -webkit-appearance: none;
+      }
+      .rating, .rating-label {
+        display: block;
+        font-family: ui-sans-serif, system-ui, sans-serif;
+      }
+      .rating-label {
+        margin-block-end: 1rem;
+      }
+      
+      /* NO JS */
+      .rating--nojs::-moz-range-track {
+        background: var(--fillbg);
+      }
+      .rating--nojs::-moz-range-progress {
+        background: var(--fill);
+        block-size: 100%;
+        mask: repeat left center/var(--starsize) var(--star);
+      }
+      .rating--nojs::-webkit-slider-runnable-track {
+        background: var(--fillbg);
+      }
+      .rating--nojs::-webkit-slider-thumb {
+        background-color: var(--fill);
+        box-shadow: calc(0rem - var(--w)) 0 0 var(--w) var(--fill);
+        opacity: 1;
+        width: 1px;
+      }
+      [dir="rtl"] .rating--nojs::-webkit-slider-thumb {
+        box-shadow: var(--w) 0 0 var(--w) var(--fill);
+    }
+    #description {
+        height: auto;
+        overflow: hidden;
+        position: relative;
+        line-height: 1.2em;
+        max-height: 2.4em; /* (1.2em * 2 lines) */
+    }
+      
+      #show-more-link {
+        display: none;
+    }
+      
+      #description.expanded {
+        max-height: none;
+    }
+      
+      #show-more-link.expanded::after {
+        content: "Show Less";
+    }
+</style>
+<style>
+    .col-md-6.border-end {
+        background-color: white;
+        padding: 10px; /* Optional: Add padding for better aesthetics */
+        /* Add any other styling properties as needed */
+        border-radius: 10px;
+    }
+</style>
+
+<script>
+    function toggleDescription() {
+        var description = document.getElementById("description");
+        var showMoreLink = document.getElementById("show-more-link");
+        
+        if (description.classList.contains("expanded")) {
+          description.classList.remove("expanded");
+          description.style.maxHeight = "6.0em"; // Set it to the collapsed height
+          showMoreLink.textContent = "Show More";
+        } else {
+          description.classList.add("expanded");
+          description.style.maxHeight = "none"; // Show the full content
+          showMoreLink.textContent = "Show Less";
+        }
+      }
+      
+      // Add an event listener to the "Show More" link
+      var showMoreLink = document.getElementById("show-more-link");
+      showMoreLink.addEventListener("click", toggleDescription);
+      
+      // Check if the description content exceeds 75 words and initially truncate it
+      var description = document.getElementById("description");
+      var words = description.textContent.split(" ");
+      if (words.length > 75) {
+        description.classList.add("expanded");
+        showMoreLink.style.display = "inline";
+        toggleDescription(); // Expand to show the full content
+      }
+</script>
+
+
+<!-- bottom navbar  -->
+
+    <nav class="bottom-navbar">
+        <a href="#home" class="fas fa-home"></a>
+        <a href="#featured" class="fas fa-list"></a>
+        <a href="#arrivals" class="fas fa-tags"></a>
+        <a href="#reviews" class="fas fa-comments"></a>
+        <a href="#blogs" class="fas fa-blog"></a>
+    </nav>
+    <!-- footer section starts  -->
+
+
+
+</body>
+
+{% endblock content %}
+

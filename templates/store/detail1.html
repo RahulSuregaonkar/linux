@@ -1,0 +1,1091 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+{% if product %}{{ product.title }}
+{% else %}
+Product detail 
+{% endif %}
+
+{% endblock title %}
+{% block content %}
+
+<head>
+    <link rel="stylesheet" type="text/css" href="{% static '/css/style2.css' %}"> 
+</head>
+<body>
+<section class="py-5">
+    
+    <div class="container">
+        {% if messages %}
+        <div class="alert alert-warning" alert-"{{ message.tags }}" role="alert">
+        {% for message in messages  %}
+        {{message|safe}} - <a href="{% url "account:wishlist" %}" class="alert-link">Your Wishlist</a>.
+        {% endfor %}
+        </div>
+        {% endif %}
+        
+      <div class="row gx-5">
+        <aside class="col-lg-6">
+            <div class="card">	
+                <div class="nissan">	
+                    <div class="col-md-6 border-end">	
+                        <div class="d-flex flex-column justify-content-center">
+
+                            <div class="main_image">
+                                {% for image in product.product_image.all %}
+                                {% if image.is_feature %}	
+                                <img src="{{ image.image.url }}" id="main_product_image" width="350">	
+                            </div>
+                            
+                            <div class="thumbnail_images">
+
+                                <ul id="thumbnail">	
+                                    <li><img onclick="changeImage(this)" src="{{ image.image.url }}" width="70"></li>
+                                    {% else %}
+                                    <li><img onclick="changeImage(this)" src="{{ image.image.url }}" width="70"></li>
+                                    {% endif %}
+                                    {% endfor %}
+
+                                </ul>
+                            </div>	
+                        </div>	
+                    </div>
+                </div>
+            </div>
+        </aside>
+        <main class="col-lg-6">
+          <div class="ps-lg-3">
+            <h2 class="title text-dark">
+                {{ product.title }}
+ 
+            </h2>
+            <h3 class = "title">
+                by {{ product.author }}
+            </h3>
+            <br>
+            
+
+            <div class="">
+                <p class="rating-text m-1 p-4"> {{ average_rating|floatformat:2 }} / 5 </p>
+                <div> 
+                    <span>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 0.5 %}-o{% elif average_rating >= 0.5 and average_rating < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 1.5 %}-o{% elif average_rating >= 1.5 and average_rating < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 2.5 %}-o{% elif average_rating >= 2.5 and average_rating < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 3.5 %}-o{% elif average_rating >= 3.5 and average_rating < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if average_rating < 4.5 %}-o{% elif average_rating >= 4.5 and average_rating < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    </span>
+                </div>
+
+              <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i></span>
+              <span class="text-success ms-2">In stock</span>
+            </div>
+            <br>
+            <div class="mb-3">
+              <span class="h3">₹ {{ product.discount_price }} </span><span class="strikep">₹ {{ product.regular_price }} </span>
+              
+              <h2 class = "offerp">({{product.discount_percentage}}% OFF)</>
+              <span class="text-muted">per book</span>
+            </div>
+  
+            <p id="description">
+                {{ product.description }}
+            </p>
+              
+            <a id="show-more-link" href="#">Show More</a>
+  
+            <div class="row">
+                <div class="row">
+                    {% for specification in specifications %}
+                        <dt class="col-3">{{ specification.specification.name }}</dt>
+                        <dd class="col-9">{{ specification.value }}</dd>
+                    {% endfor %}
+                    <dt class="col-3">Language</dt>
+                    <dd class="col-9">{{ product.language }}</dd>
+                </div>
+
+
+
+            </div>
+            
+  
+
+              <!-- col.// -->
+            <div class="d-flex">
+                <label for="select">Quantity</label>
+                            <select id="select">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                            </select>
+                <br>
+                
+                <button class="btn btn-primary shadow-0" type="button" id = "add-button" value= "{{ product.id }}">
+                    <i class="bi-cart-fill me-1"></i>
+                    Add to cart
+                </button>
+                <a href="{% url "account:user_wishlist" product.id %}" class="btn btn-light fw500" role="button" aria-disabled="true">Add To Wish List</a>
+            </div>
+
+            
+  
+        </main>
+      </div>
+    </div>
+  </section>
+  <!-- content -->
+  <div class="spaces1"></div>
+  <div class="card">
+      <div class="card-body">
+          <div class="row">
+              <div class="col-md-12">
+                  <div class="row justify-content-start">
+
+                      <div class="col-md-2 col-6 text-center mt-2 mb-2 no-padding">
+                        
+                            <p class="rating-text"> {{ average_rating|floatformat:2 }} / 5 </p>
+                            <br>
+                            
+                            <span>
+                                <i class="fa fa-star fa-lg star-icon4{% if average_rating < 0.5 %}-o{% elif average_rating >= 0.5 and average_rating < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                <i class="fa fa-star fa-lg star-icon4{% if average_rating < 1.5 %}-o{% elif average_rating >= 1.5 and average_rating < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                <i class="fa fa-star fa-lg star-icon4{% if average_rating < 2.5 %}-o{% elif average_rating >= 2.5 and average_rating < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                <i class="fa fa-star fa-lg star-icon4{% if average_rating < 3.5 %}-o{% elif average_rating >= 3.5 and average_rating < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                                <i class="fa fa-star fa-lg star-icon4{% if average_rating < 4.5 %}-o{% elif average_rating >= 4.5 and average_rating < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                            </span>
+                      </div>
+                      <div class="col-md-2 col-6 no-padding">
+                        {% with allcomments.count as total_comments %}
+                        <h2>
+                        {{ total_comments }} review{{ total_comments|pluralize }}
+                        </h2>
+                        {% endwith %}
+                      </div>
+                  </div>
+              </div>
+              <div class="col-md-4">
+                  <div class="row">
+                      <!-- <div class="col-md-12">
+                          <p class="rating-text"> 5/5 </p>
+                      </div>
+                      <div class="col-md-7 col-6 text-center mt-2 mb-2">
+                              <i class="fa fa-star fa-lg star-icon4"> </i></li>
+                              <i class="fa fa-star-half-alt fa-lg star-icon4"></i></li>
+                              <i class="far fa-star fa-lg star-icon4"></i></li>
+                              <i class="far fa-star fa-lg star-icon4"></i></li>
+                              <i class="far fa-star fa-lg star-icon4"></i></li>
+                      </div>
+                      <div class="col-md-5 col-6 no-padding">
+                          <button class="review-btn">Add a review</button>
+                      </div> -->
+                      <div class="col-md-12">
+                          <div class="line1"></div>
+                      </div>
+                      <div class="col-md-12">
+                          <p class="reviewer-text">Amount of reviewers </p>
+                      </div>
+                  </div>
+                  <div class="row mt-4">
+                      <div class="col-md-12">
+                          <div class="row progress-bg">
+                              <div class="col-md-6 col-5">
+                                      <span class="rating-num mr-3">  5 </span> 
+                                      <i class="fa fa-star star-icon5"></i>
+                                      <span class="reviewer-num ml-3"> ({{ five_avg_rating|floatformat:2 }}%) </span>
+                              </div>
+                              <div class="col-md-6 col-7 mt-2">
+                                  <div class="progress progress-wait">
+                                      <div class="progress-bar progress-done" role="progressbar" style="width: {{ five_avg_rating }}%;" 
+                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      </div>
+                                  </div> 
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-12">
+                          <div class="row">
+                              <div class="col-md-6 col-5">
+                                      <span class="rating-num mr-3">  4 </span> 
+                                      <i class="far fa-star star-icon5"></i>
+                                      <span class="reviewer-num ml-3"> ({{ four_avg_rating|floatformat:2 }}%) </span>
+                              </div>
+                              <div class="col-md-6 col-7 mt-2">
+                                  <div class="progress progress-wait">
+                                      <div class="progress-bar progress-done" role="progressbar" style="width: {{ four_avg_rating }}%;" 
+                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      </div>
+                                  </div> 
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-12 mt-1">
+                          <div class="row">
+                              <div class="col-md-6 col-5">
+                                      <span class="rating-num mr-3">  3 </span> 
+                                      <i class="far fa-star star-icon5"></i>
+                                      <span class="reviewer-num ml-3"> ({{ three_avg_rating|floatformat:2 }}%) </span>
+                              </div>
+                              <div class="col-md-6 col-7 mt-2">
+                                  <div class="progress progress-wait">
+                                      <div class="progress-bar progress-done" role="progressbar" style="width:{{ three_avg_rating }}%;" 
+                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      </div>
+                                  </div> 
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-12 mt-1">
+                          <div class="row">
+                              <div class="col-md-6 col-5">
+                                      <span class="rating-num mr-3">  2 </span> 
+                                      <i class="far fa-star star-icon5"></i>
+                                      <span class="reviewer-num ml-3"> ({{ two_avg_rating|floatformat:2 }}%) </span>
+                              </div>
+                              <div class="col-md-6 col-7 mt-2">
+                                  <div class="progress progress-wait">
+                                      <div class="progress-bar progress-done" role="progressbar" style="width:{{ two_avg_rating }}%;" 
+                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      </div>
+                                  </div> 
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-12 mt-1">
+                          <div class="row">
+                              <div class="col-md-6 col-5">
+                                      <span class="rating-num mr-3">  1 </span> 
+                                      <i class="far fa-star star-icon5"></i>
+                                      <span class="reviewer-num ml-3"> ({{ avg_rating|floatformat:2 }}%) </span>
+                              </div>
+                              <div class="col-md-6 col-7 mt-2">
+                                  <div class="progress progress-wait">
+                                      <div class="progress-bar progress-done" role="progressbar" style="width: {{ avg_rating }}%;" 
+                                          aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                      </div>
+                                  </div> 
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              
+              <div class="col-md-4 mt-3">
+
+                  <div class="row justify-content-center">
+                      <div class="col-md-9 col-9">
+                        <div class="col-md-12">
+                            <p class="rating-text"> 5/5 </p>
+                        </div>
+                          <p class="users-reviews mb-2"> Reviews by the users</p>
+                      </div>
+                      
+                      <div class="col-md-9 col-9">
+                          <p class="users-name mb-0">{{ top_comment.name }}</p>
+                      </div>
+                      <div class="col-md-9 col-9">
+                          <p class="star-icon6 mb-1">
+                              <i class="fas fa-star star-icon6"></i>
+                              <i class="fas fa-star star-icon6"></i>
+                              <i class="fas fa-star star-icon6"></i>
+                              <i class="fas fa-star star-icon6"></i>
+                              <i class="fas fa-star star-icon6"></i>
+                              <span class="users-stars mb-1"> (5 stars) Reviews</span>
+                          </p>
+                      </div>
+                      
+                      <div class="col-md-9 col-9">
+                          <p class="users-use mb-1">{{ top_comment.publish }} </p>
+                      </div>
+                      <div class="col-md-9 col-9 mb-2">
+                          <h5 class=""> 
+                            {{ top_comment.content }}
+                          </h5>
+                      </div>
+                      
+                  </div>
+              </div>
+              
+              <div class="col-md-4">
+                  <div class="row">
+                      <div width="40" height="40" class="rounded-circle mr-3">
+                            
+                        {% if top_comment %}
+                        <p class="users-photo mb-1">Top Ratings By customers</p>
+                        <img src="{{ top_comment.image.avatar.url }}" class="reviewer-photo" />
+                        {% else %}
+                        <p class="users-photo mb-1">Top Ratings By customers are none</p>
+                        <p class="users-photo mb-1">5 star By customers are none</p>
+                        {% endif %}
+                      </div>
+                  </div>
+              </div>
+          </div>
+          
+          
+      </div>
+  </div>
+
+  <div class="container mt-5 mb-5">
+
+    <div class="row height d-flex justify-content-center align-items-center">
+
+      <div class="col-md-7">
+
+        <div class="card" id='productss'>
+            <h1>Reviews</h1>
+          
+          <div class="mt-2">
+            
+            {% with allcomments.count as total_comments %}
+            <h2>
+            {{ total_comments }} comment{{ total_comments|pluralize }}
+            </h2>
+            {% endwith %}
+
+            {% load mptt_tags %}
+
+            {% recursetree comments %}
+            <div class="p-3" id = "{{ node.id }}">
+
+                
+              
+
+              <div class="w-100">
+                <img src="{{ node.image.avatar.url  }}" width="40" height="40" class="rounded-circle mr-3">
+                
+                <div class="d-flex justify-content-between align-items-center">
+                    
+                    <div class="d-flex flex-row align-items-center">
+                      <h4 class="">{{ node.name }}</h4>
+
+                    </div>
+                    <small><p class=""></p></small>
+              </div>
+
+
+              <h5 class="text-justify comment-text mb-0">{{ node.rate }}/5</h5>
+              
+              <h5 class="text-justify comment-text mb-0">{{ node.content }}</h5>
+              
+
+              <div class="d-flex flex-row user-feed">
+
+                {% if node.rate > 0 %}
+                <label class="rating-label"><strong>stars<code></code></strong>
+                    <span>
+                        <i class="fa fa-star fa-lg star-icon4{% if node.rate < 0.5 %}-o{% elif node.rate >= 0.5 and node.rate < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if node.rate < 1.5 %}-o{% elif node.rate >= 1.5 and node.rate < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if node.rate < 2.5 %}-o{% elif node.rate >= 2.5 and node.rate < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if node.rate < 3.5 %}-o{% elif node.rate >= 3.5 and node.rate < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star fa-lg star-icon4{% if node.rate < 4.5 %}-o{% elif node.rate >= 4.5 and node.rate < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                    </span>
+                </label>
+                {% endif %}
+                <br>
+                <span class="wish"><i class="fa fa-heartbeat mr-1"></i>{{ node.publish }}</span>
+                </span>
+              </div>
+              {% if node.level < 2 %}
+              {% if user.is_authenticated %}
+              <button class='btn btn-primary btn-sm' onclick = "myFunction({{ node.id }})">
+                  Reply
+              </button>
+              {% endif %}
+              {% endif %}
+              
+              {% if node.name|stringformat:"s" == user_name %}
+              <button class="btn btn-secondary btn-sm mr-2 p-2" onclick="deleteComment({{ node.id }})">Delete</button>
+              {% endif %}
+              <div class="">
+                    {% if not node.is_leaf_node %}
+                    <div class = "children pl-2 pl-md-5">
+                    {{ children }}
+                    </div>
+                    {% endif %}
+               </div>
+                </hr>
+
+              
+            </div>
+            
+
+           
+            
+            
+          </div>
+          {% endrecursetree %}
+          <button class="btn btn-primary btn-sm" id="load-more-comments" onclick="loadMoreComments()">Load More</button>
+          <button class="btn btn-primary btn-sm" id="load-less-comments" onclick="loadLessComments()">Load Less</button>
+          <button class="btn btn-primary btn-sm" id="last-4-comments" onclick="showLast4Comments()">Last Comments</button>
+          <button class="btn btn-primary btn-sm" id="first-4-comments" onclick="showFirst4Comments()">First 4 Comments</button>
+
+          <!--<div class="py-4">
+            <nav aria-label="Page navigation example">
+              {% if comments.has_other_pages %}
+              <ul class="pagination">
+                {% if comments.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{ comments.previous_page_number }}">Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
+                {% for num in comments.paginator.page_range %}
+                {% if comments.number == l %}
+                <li class="page-item active"><span class="page-link">{{ num }} <span class="sr-only">(current)</span></span>
+                </li>
+                {% else %}
+                <li><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+                {% endif %}
+                {% endfor %}
+                {% if comments.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{ comments.next_page_number }}">Next</a></li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                {% endif %}
+              </ul>
+              {% endif %}
+            </nav>
+          </div>-->
+
+          {% if user.is_authenticated %}
+          <div class="">
+            <h3>Make a new comment</h3>
+          </div>
+
+          <div class="mt-3 d-flex flex-row align-items-center p-3 form-color">
+            
+            <img src="https://i.imgur.com/zQZSWrt.jpg" width="50" class="rounded-circle" >
+            <div class = "col-md-11 mx-auto">
+                <form id="commentform" class="commentform" method="post">
+                    <h2>Comment Now!</h2>
+                    <select name="post" class="d-none" id="post_id">
+                        <option value="{{ product.id }}" selected="{{ product.id }}"></option>
+                    </select>
+                    <label class="small font-weight-bold">{{ comment_form.parent.label}}</label>
+                    {{ comment_form.parent }}
+                    {{ comment_form.content }}
+                    <div class="rate">
+                        <input type="radio" id="star5" name="rate" value="5" />
+                        <label for="star5" >5 stars</label>
+                        <input type="radio" id="star4" name="rate" value="4" />
+                        <label for="star4" >4 stars</label>
+                        <input type="radio" id="star3" name="rate" value="3" />
+                        <label for="star3" >3 stars</label>
+                        <input type="radio" id="star2" name="rate" value="2" />
+                        <label for="star2" >2 stars</label> 
+                        <input type="radio" id="star1" name="rate" value="1" />
+                        <label for="star1" >1 star</label>
+                    </div>
+                    <input class= "d-none" type="radio" id="star1" name="rate" value="0" checked />
+                    {% csrf_token %}
+                    <button value ="commentform" id = "newcomment" type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                </form>
+            </div>
+          </div>
+          {% endif %}
+          
+
+          
+          
+        </div>
+
+        
+    
+
+        
+      </div>
+      
+    </div>
+    <style>
+        .rate {
+            float: left;
+            height: 46px;
+            padding: 0 10px;
+        }
+        .rate:not(:checked) > input {
+            position:absolute;
+            top:-9999px;
+        }
+        .rate:not(:checked) > label {
+            float:right;
+            width:1em;
+            overflow:hidden;
+            white-space:nowrap;
+            cursor:pointer;
+            font-size:30px;
+            color:#ccc;
+        }
+        .rate:not(:checked) > label:before {
+            content: '★ ';
+        }
+        .rate > input:checked ~ label {
+            color: #ffc700;    
+        }
+        .rate:not(:checked) > label:hover,
+        .rate:not(:checked) > label:hover ~ label {
+            color: #deb217;  
+        }
+        .rate > input:checked + label:hover,
+        .rate > input:checked + label:hover ~ label,
+        .rate > input:checked ~ label:hover,
+        .rate > input:checked ~ label:hover ~ label,
+        .rate > label:hover ~ input:checked ~ label {
+            color: #c59b08;
+        }
+        .rate input {
+            display: none;
+        }
+        body{
+
+            background-color: #eee;
+        }
+        
+        .card{
+            
+            background-color: #fff;
+            border: none;
+        }
+        
+        .form-color{
+          
+           background-color: #fafafa;
+        
+        }
+        
+        .form-control{
+        
+            height: 48px;
+            border-radius: 25px;
+        }
+        
+        .form-control:focus {
+            color: #495057;
+            background-color: #fff;
+            border-color: #35b69f;
+            outline: 0;
+            box-shadow: none;
+            text-indent: 10px;
+        }
+        
+        .c-badge{
+            background-color: #35b69f;
+            color: white;
+            height: 20px;
+            font-size: 11px;
+            width: 92px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 2px;
+        }
+        
+        .comment-text{
+            font-size: 13px;
+        }
+        
+        .wish{
+        
+            color:#35b69f;
+        }
+        
+        
+        .user-feed{
+        
+                font-size: 14px;
+                margin-top: 12px;
+        }
+
+        .children form {
+            margin-left: -48px;
+        }
+
+        .children .children form {
+            margin-left: -48px;
+        }
+        
+
+        .rating {
+            --dir: right;
+            --fill: gold;
+            --fillbg: rgba(100, 100, 100, 0.15);
+            --heart: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.328l-1.453-1.313q-2.484-2.25-3.609-3.328t-2.508-2.672-1.898-2.883-0.516-2.648q0-2.297 1.57-3.891t3.914-1.594q2.719 0 4.5 2.109 1.781-2.109 4.5-2.109 2.344 0 3.914 1.594t1.57 3.891q0 1.828-1.219 3.797t-2.648 3.422-4.664 4.359z"/></svg>');
+            --star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
+            --stars: 5;
+            --starsize: 3rem;
+            --symbol: var(--star);
+            --value: 1;
+            --w: calc(var(--stars) * var(--starsize));
+            --x: calc(100% * (var(--value) / var(--stars)));
+            block-size: var(--starsize);
+            inline-size: var(--w);
+            position: relative;
+            padding: 0rem;
+            touch-action: manipulation;
+            -webkit-appearance: none;
+          }
+          [dir="rtl"] .rating {
+            --dir: left;
+          }
+          .rating::-moz-range-track {
+            background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+            block-size: 100%;
+            mask: repeat left center/var(--starsize) var(--symbol);
+          }
+          .rating::-webkit-slider-runnable-track {
+            background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+            block-size: 100%;
+            mask: repeat left center/var(--starsize) var(--symbol);
+            -webkit-mask: repeat left center/var(--starsize) var(--symbol);
+          }
+          .rating::-moz-range-thumb {
+            height: var(--starsize);
+            opacity: 0;
+            width: var(--starsize);
+          }
+          .rating::-webkit-slider-thumb {
+            height: var(--starsize);
+            opacity: 0;
+            width: var(--starsize);
+            -webkit-appearance: none;
+          }
+          .rating, .rating-label {
+            display: block;
+            font-family: ui-sans-serif, system-ui, sans-serif;
+          }
+          .rating-label {
+            margin-block-end: 1rem;
+          }
+          
+          /* NO JS */
+          .rating--nojs::-moz-range-track {
+            background: var(--fillbg);
+          }
+          .rating--nojs::-moz-range-progress {
+            background: var(--fill);
+            block-size: 100%;
+            mask: repeat left center/var(--starsize) var(--star);
+          }
+          .rating--nojs::-webkit-slider-runnable-track {
+            background: var(--fillbg);
+          }
+          .rating--nojs::-webkit-slider-thumb {
+            background-color: var(--fill);
+            box-shadow: calc(0rem - var(--w)) 0 0 var(--w) var(--fill);
+            opacity: 1;
+            width: 1px;
+          }
+          [dir="rtl"] .rating--nojs::-webkit-slider-thumb {
+            box-shadow: var(--w) 0 0 var(--w) var(--fill);
+        }
+        #description {
+            height: auto;
+            overflow: hidden;
+            position: relative;
+            line-height: 1.2em;
+            max-height: 2.4em; /* (1.2em * 2 lines) */
+        }
+          
+          #show-more-link {
+            display: none;
+        }
+          
+          #description.expanded {
+            max-height: none;
+        }
+          
+          #show-more-link.expanded::after {
+            content: "Show Less";
+        }
+    </style>
+    <style>
+        #productss .p-3 {
+            display: none; /* Initially hide all comment containers */
+        }
+    
+        #load-more-comments,
+        #load-less-comments,
+        #last-4-comments,
+        #first-4-comments {
+            background-color: #007bff; /* Blue background color for the button */
+            color: #fff; /* White text color */
+            border: none; /* Remove button border */
+            padding: 10px 15px; /* Add padding to the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+            border-radius: 5px; /* Add border radius for rounded button corners */
+            margin-top: 10px; /* Add margin at the top of the buttons */
+            margin-right: 10px; /* Add margin at the right of the buttons */
+        }
+    
+        #load-more-comments:hover,
+        #load-less-comments:hover,
+        #last-4-comments:hover,
+        #first-4-comments:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        /* Add this to your existing stylesheet or create a new one */
+        .star-icon4-half-o::before {
+            content: '\f089'; /* Unicode character for the half-star in Font Awesome */
+            color: var(--green); /* Change the color to your desired color */
+            position: relative;
+            display: inline-block;
+            width: 1em; /* Adjust the width as needed */
+            font-family: 'Font Awesome\ 5 Free'; /* Adjust the font family if needed */
+        }
+
+        /* If you want to adjust the size of the icon, you can use the following CSS */
+        .star-icon4-half-o {
+            font-size: 19px; /* Adjust the font size as needed */
+        }
+    </style>
+    </div>
+    
+  </div>
+  <div class="spaces1"></div>
+  <div class="row">
+      <div class="col-md-12">
+          <p class="section-title4">You may also Like </p>
+      </div>
+      <div class="col-md-12">
+          <div class="discovers-grid">
+            {% for similar_product in similar_products %}
+            <a href="{{ similar_product.get_absolute_url }}">
+                <figure>
+                    <div class="image-icons">
+                        {% for image in similar_product.product_image.all %}
+                        {% if image.is_feature %}
+                            <img src="{{ image.image.url }}" alt="{{ similar_product.title }}" />
+                            <!-- Your other icons and buttons go here -->
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                    <figcaption class="discover-caption">
+                        <p class="discover-subtitle">{{ similar_product.author }}</p>
+                        <p class="discover-title">{{ similar_product.title }}</p>
+                        <div class="price-div">
+                            <p class="price">₹ {{ similar_product.regular_price }}</p>
+                            <p class="sale-price">₹ {{ similar_product.discount_price }}</p>
+                        </div>
+                    </figcaption>
+                </figure>
+            </a>
+            {% endfor %}
+          </div>
+      </div>
+  </div>
+  <div class="spaces1"></div>
+  <div class="row">
+      <div class="col-md-12">
+          <p class="section-title4">similar products</p>
+      </div>
+      <div class="col-md-12">
+          <div class="discovers-grid">
+            {% for similar_product in different_products %}
+            <a href="{{ similar_product.get_absolute_url }}">
+                <figure>
+                    <div class="image-icons">
+                        {% for image in similar_product.product_image.all %}
+                        {% if image.is_feature %}
+                            <img src="{{ image.image.url }}" alt="{{ similar_product.title }}" />
+                            <!-- Your other icons and buttons go here -->
+                        {% endif %}
+                    {% endfor %}
+                    </div>
+                    <figcaption class="discover-caption">
+                        <p class="discover-subtitle">{{ similar_product.author }}</p>
+                        <p class="discover-title">{{ similar_product.title }}</p>
+                        <div class="price-div">
+                            <p class="price">₹ {{ similar_product.regular_price }}</p>
+                            <p class="sale-price">₹ {{ similar_product.discount_price }}</p>
+                        </div>
+                    </figcaption>
+                </figure>
+            </a>
+            {% endfor %}
+          </div>
+      </div>
+  </div>
+  <div class="spaces"></div>
+  <br>
+</div>
+</main>
+<br/><br/>
+
+
+
+
+
+<!-- bottom navbar  -->
+    <!-- footer section starts  -->
+
+
+  
+
+
+
+  
+<script>
+    $(document).on('click', '#add-button', function (e) {
+      e.preventDefault();
+      
+      $.ajax({
+        type: 'POST',
+        url: '{% url "basket:basket_add" %}',
+        data: {
+          productid: $('#add-button').val(),
+          productqty: $('#select option:selected').text(),
+          csrfmiddlewaretoken:"{{csrf_token}}",
+          action: 'post' 
+        },
+        success: function (json) {
+          document.querySelector('.icons span').textContent = json.qty
+  
+        },
+        error: function (xhr, errmsg, err) {}
+      })
+    });
+</script>
+<script>
+    function changeImage(element) {
+    
+      var main_prodcut_image = document.getElementById('main_product_image');
+      main_prodcut_image.src = element.src;
+        
+    
+
+    }
+
+</script>
+<script>
+    $(document).on('click', '#newcomment, #newcommentinner', function (e) {
+        e.preventDefault();
+    
+        var button = $(this).attr("value");
+    
+        var placement = "commentform"
+        if (button == "newcommentform") {
+          var placement = "newcommentform"
+        }
+    
+        $.ajax({
+          type: 'POST',
+          url: '{% url "store:addcomment" %}',
+          data: $("#" + button).serialize(),
+          cache: false,
+          success: function (json) {
+            console.log(json)
+    
+    
+            $('<div id="" class="my-2 p-2" style="border: 1px solid grey"> \
+              <div class="d-flex justify-content-between">By ' + json['user_name'] + '<div></div>Posted: Just now!</div> \
+              <div>' + json['result'] + '</div> \
+              <hr> \
+              </div>').insertBefore('#' + placement);
+    
+            $('.commentform').trigger("reset");
+            location.reload();
+            formExit()
+            
+    
+          },
+          error: function (xhr, errmsg, err) {
+    
+          }
+        });
+    })
+
+    function deleteComment(id) {
+        console.log(id)
+        $.ajax({
+          type: 'POST',
+          url: '{% url "store:addcomment" %}',
+          data: {
+            nodeid: id,
+            action: 'delete',
+            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+          },
+          success: function (json) {
+            $("#" + json['remove']).remove();
+            location.reload();
+          },
+          error: function (xhr, errmsg, err) {}
+        });
+    }
+
+
+
+
+
+
+    function formExit() {
+        document.getElementById("newcommentform").remove();
+    }
+
+    function myFunction(id) {
+        var a = document.getElementById(id);
+
+        if (document.contains(document.getElementById("newcommentform"))) {
+            formExit();
+        }
+
+        
+        a.insertAdjacentHTML('afterend', 
+                '<div class="mt-3 d-flex flex-row align-items-center p-3">\
+                    <form id="newcommentform" class="commentform" method="post">\
+                    <h2>Reply Now!</h2>\
+                    {% csrf_token %} \
+                    <label class="small font-weight-bold"></label>\
+                    <select name="post" class="d-none" id="post_id">\
+                        <option value="{{ product.id }}" selected="{{ product.id }}"></option>\
+                    </select>\
+                    <select name="parent" class="d-none" id="id_parentT"> \
+                        <option value="' + id + '" selected="' + id + '"></option> \
+                    </select> \
+                    <textarea name="content" class = "form-control" cols="40" rows="2" required="" id="id_content"></textarea>\
+                    <div class="rate">\
+                        <input type="radio" id="star5" name="rate" value="5" />\
+                        <label for="star5" >5 stars</label>\
+                        <input type="radio" id="star4" name="rate" value="4" />\
+                        <label for="star4" >4 stars</label>\
+                        <input type="radio" id="star3" name="rate" value="3" />\
+                        <label for="star3" >3 stars</label>\
+                        <input type="radio" id="star2" name="rate" value="2" />\
+                        <label for="star2" >2 stars</label> \
+                        <input type="radio" id="star1" name="rate" value="1" />\
+                        <label for="star1" >1 star</label>\
+                    </div>\
+                    <br>\
+                    <input class="d-none" type="radio" id="star1" name="rate" value="0" checked />\
+                    {% csrf_token %} \
+                    <button type="button" class="btn btn-outline-secondary" onclick="formExit()">Close</button> \
+                    <button value="newcommentform" id="newcommentinner" type="submit" class="btn btn-primary btn-sm">Submit</button>\
+                    </form>\
+                </div>');
+    }
+    $('.commentform').trigger("reset");
+    $('#myForm').trigger("reset");
+
+</script>
+<script>
+    function toggleDescription() {
+        var description = document.getElementById("description");
+        var showMoreLink = document.getElementById("show-more-link");
+        
+        if (description.classList.contains("expanded")) {
+          description.classList.remove("expanded");
+          description.style.maxHeight = "2.4em"; // Set it to the collapsed height
+          showMoreLink.textContent = "Show More";
+        } else {
+          description.classList.add("expanded");
+          description.style.maxHeight = "none"; // Show the full content
+          showMoreLink.textContent = "Show Less";
+        }
+      }
+      
+      // Add an event listener to the "Show More" link
+      var showMoreLink = document.getElementById("show-more-link");
+      showMoreLink.addEventListener("click", toggleDescription);
+      
+      // Check if the description content exceeds 75 words and initially truncate it
+      var description = document.getElementById("description");
+      var words = description.textContent.split(" ");
+      if (words.length > 75) {
+        description.classList.add("expanded");
+        showMoreLink.style.display = "inline";
+        toggleDescription(); // Expand to show the full content
+      }
+</script>
+<script>
+    let visibleComments = 4; // Number of comments to initially display
+    let commentContainers = document.querySelectorAll('#productss .p-3');
+
+    function showComments(start, end) {
+        for (let i = 0; i < commentContainers.length; i++) {
+            if (i >= start && i < end) {
+                commentContainers[i].style.display = 'block';
+            } else {
+                commentContainers[i].style.display = 'none';
+            }
+        }
+    }
+
+    function loadMoreComments() {
+        visibleComments += 4; // Increase the number of visible comments
+        showComments(0, visibleComments);
+
+        // Show the "Load Less" button when comments are loaded
+        document.getElementById('load-less-comments').style.display = visibleComments > 4 ? 'inline-block' : 'none';
+        // Show the "Last 4 Comments" button when comments are loaded
+        document.getElementById('last-4-comments').style.display = 'inline-block';
+
+        // Hide the "Load More" button if all comments are visible
+        if (visibleComments >= commentContainers.length) {
+            document.getElementById('load-more-comments').style.display = 'none';
+        }
+    }
+
+    function loadLessComments() {
+        visibleComments -= 4; // Decrease the number of visible comments
+        if (visibleComments <= 4) {
+            visibleComments = 4; // Ensure there are at least 4 comments visible
+            document.getElementById('load-less-comments').style.display = 'none';
+        }
+        showComments(0, visibleComments);
+
+        // Show the "Load More" button when comments are loaded
+        document.getElementById('load-more-comments').style.display = 'inline-block';
+        // Show the "Last 4 Comments" button when comments are loaded
+        document.getElementById('last-4-comments').style.display = 'inline-block';
+    }
+
+    function showLast4Comments() {
+        // Calculate the starting index for the last 4 comments
+        const startIndex = Math.max(commentContainers.length - 4, 0);
+        showComments(startIndex, commentContainers.length);
+
+        // Hide the "Load More" and "Load Less" buttons
+        document.getElementById('load-more-comments').style.display = 'none';
+        document.getElementById('load-less-comments').style.display = 'none';
+        // Hide the "Last 4 Comments" button after showing the last 4 comments
+        document.getElementById('last-4-comments').style.display = 'none';
+        // Show the "First 4 Comments" button on the "Last 4 Comments" page
+        document.getElementById('first-4-comments').style.display = 'inline-block';
+    }
+
+    function showFirst4Comments() {
+        // Set visibleComments to 4 to show only the first 4 comments
+        visibleComments = 4;
+    
+        // Show the initial set of comments (first 4)
+        showComments(0, visibleComments);
+    
+        // Show all buttons when coming back to the initial set of comments
+        document.getElementById('load-more-comments').style.display = 'inline-block';
+        document.getElementById('load-less-comments').style.display = commentContainers.length > 4 ? 'inline-block' : 'none';
+        document.getElementById('last-4-comments').style.display = 'inline-block';
+        
+        // Hide the "First 4 Comments" button when the first 4 comments are loaded
+        document.getElementById('first-4-comments').style.display = 'none';
+    }
+
+    // Initial setup to show the first batch of comments
+    document.addEventListener('DOMContentLoaded', function () {
+        showComments(0, visibleComments);
+
+        // Hide the "Load Less" button initially if there are 4 or fewer comments
+        document.getElementById('load-less-comments').style.display = commentContainers.length > 4 ? 'none' : 'none';
+
+        document.getElementById('first-4-comments').style.display = commentContainers.length > 4 ? 'none' : 'none';
+        document.getElementById('last-4-comments').style.display = commentContainers.length > 4 ? 'none' : 'none';
+        // Hide the "Load More" button if all comments are visible initially
+        if (visibleComments >= commentContainers.length) {
+            document.getElementById('load-more-comments').style.display = 'none';
+        }
+    });
+</script>
+</body>
+<script src="{% static 'JS/scripts.js' %}"></script>
+
+{% endblock content %}
+

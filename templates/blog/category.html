@@ -1,0 +1,388 @@
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Completed - NewsFlash | Home</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.png">
+    <!-- Remix icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Swiper.js styles -->
+    <link rel="stylesheet" href="{% static '/css/swiper-bundle.min.css' %}"/>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static '/css/blog2.css' %}">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+
+        <nav class="navbar container">
+            <a href="{% url "blog:homepage" %}">
+                <h2 class="logo">Blogs</h2>
+            </a>
+
+            <div class="menu" id="menu">
+                <ul class="list">
+                    <li class="list-item">
+                        <a href="{% url "blog:homepage" %}" class="list-link current">Home</a>
+                    </li>
+                    <div class="col-12 pb-5">
+                        <ul class="dropdown">
+                            <li class="list-item" id="categoriesDropdown">
+                                <a href="#" onclick="toggleCategoriesDropdown()">Categories</a>
+                                <ul class="dropdown-menu" id="categoriesList">
+                                    {% for category in category_list %}
+                                        <li class="dropdown-item"><a href="/blog/category/{{category.name}}">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>   
+                    <li class="list-item">
+                        <a href="{% url "blog:all_blog" %}" class="list-link">all blogs</a>
+                    </li>
+                    <li class="list-item screen-lg-hidden">
+                        <a href="{% url "account:login" %}" class="list-link">log in</a>
+                    </li>
+                    <li class="list-item screen-lg-hidden">
+                        <a href="{% url "account:register" %}" class="list-link">Sign up</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list list-right">
+                <button class="btn place-items-center" id="theme-toggle-btn">
+                    <i class="ri-sun-line sun-icon"></i>
+                    <i class="ri-moon-line moon-icon"></i>
+                </button>
+
+                <button class="btn place-items-center" id="search-icon">
+                    <i class="ri-search-line"></i>
+                </button>
+
+                <button class="btn place-items-center screen-lg-hidden menu-toggle-icon" id="menu-toggle-icon">
+                    <i class="ri-menu-3-line open-menu-icon"></i>
+                    <i class="ri-close-line close-menu-icon"></i>
+                </button>
+
+                <a href="{% url "account:login" %}" class="list-link screen-sm-hidden">log in</a>
+                <a href="{% url "account:register" %}" class="btn sign-up-btn fancy-border screen-sm-hidden">
+                    <span>Sign up</span>
+                </a>
+            </div>
+
+        </nav>
+
+    </header>
+
+    <!-- Search -->
+    <div class="search-form-container container" id="search-form-container">
+
+        <div class="form-container-inner">
+
+            <form action="/blog/search/" method="get" class="form" id="blog-search-form">
+                {% csrf_token %}
+                <input class="form-input" name="q" type="search" placeholder="What are you looking for?" id="blog-search-box">
+                <div id="blog-suggestions-container" class="dropdown">
+                </div>
+                <button class="btn form-btn" type="submit">
+                    <i class="ri-search-line"></i>
+                </button>
+
+            </form>
+            <ul id="blog-suggestions-list" class="new_dropdown" aria-labelledby="">
+                <!-- Suggestions will be added dynamically here -->
+            </ul>
+            <span class="form-note">Or press ESC to close.</span>
+
+        </div>
+
+        <button class="btn form-close-btn place-items-center" id="form-close-btn">
+            <i class="ri-close-line"></i>
+        </button>
+
+    </div>
+
+    <section class="older-posts section">
+        <div class='title'>
+            <h1> List of {{catlist.cat}} posts</h1>
+        </div>
+
+        <div class="container">
+
+            
+            {% for post in catlist.posts %}
+            <div class="older-posts-grid-wrapper">
+
+
+                <a href="{{post.get_absolute_url}}" class="article d-grid">
+                    <div class="older-posts-article-image-wrapper">
+                        <img src="{{ post.image.url }}" alt="" class="article-image">
+                    </div>
+
+                    <div class="article-data-container">
+
+                        <div class="article-data">
+                            <span>23 Dec 2021</span>
+                            <span class="article-data-spacer"></span>
+                            <span>3 Min read</span>
+                        </div>
+
+                        <h3 class="title article-title">{{post.title|truncatechars:50}}</h3>
+                        <p class="article-description">{{post.excerpt|truncatechars:50}}</p>
+
+                    </div>
+                </a>
+
+            </div>
+            {% endfor %}
+                
+
+            <div class="see-more-container">
+                <a href="#" class="btn see-more-btn place-items-center">See more <i class="ri-arrow-right-s-line"></i></i></a>
+            </div>
+
+        </div>
+
+    </section>
+        <!-- Footer -->
+        <footer class="footer section">
+
+            <div class="footer-container container d-grid">
+                
+                <div class="company-data">
+                    <a href="./index.html">
+                        <h2 class="logo">Blogs</h2>
+                    </a>
+                    <p class="company-description">"Words have the power to inspire, create, and transform. In the vast landscape of the internet, let your blog be a beacon of insight and a source of positive influence. Craft your words with care, for in each sentence lies the potential to resonate with a reader and spark a meaningful connection."</p>
+                    
+                    <ul class="list social-media">
+                        <li class="list-item">
+                            <a href="#" class="list-link"><i class="ri-instagram-line"></i></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link"><i class="ri-facebook-circle-line"></i></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link"><i class="ri-twitter-line"></i></a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link"><i class="ri-pinterest-line"></i></a>
+                        </li>
+                    </ul>
+    
+                    <span class="copyright-notice"></span>
+                </div>
+    
+                <div>
+                    <h6 class="title footer-title">Categories</h6>
+                    
+                    <ul class="footer-list list">
+                        <li class="list-item">
+                            <a href="/blog/category/travel/" class="list-link">Travel</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="/blog/category/food/" class="list-link">Food</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="/blog/category/Technology/" class="list-link">Technology</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="/blog/category/health/" class="list-link">Health</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="/blog/category/nature/" class="list-link">Nature</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="/blog/category/fitness" class="list-link">Fitness</a>
+                        </li>
+                    </ul>
+    
+                </div>
+    
+                <div>
+                    <h6 class="title footer-title">Useful links</h6>
+                    
+                    <ul class="footer-list list">
+                        <li class="list-item">
+                            <a href="{% url 'blog:homepage'%}" class="list-link">Home</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="{% url 'blog:all_blog' %}" class="list-link">all blogs</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="{% url 'store:all_products' %}" class="list-link">Store</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="{% url 'account:login' %}" class="list-link">login</a>
+                        </li>
+                    </ul>
+    
+                </div>
+    
+                <div>
+                    <h6 class="title footer-title">Company</h6>
+                    
+                    <ul class="footer-list list">
+                        <li class="list-item">
+                            <a href="#" class="list-link">Contact us</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link">F.A.Q</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link">Careers</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link">Authors</a>
+                        </li>
+                        <li class="list-item">
+                            <a href="#" class="list-link">Memberships</a>
+                        </li>
+                    </ul>
+    
+                </div>
+    
+            </div>
+            
+        </footer>
+        <style>
+            .older-posts-grid-wrapper {
+                gap: 30px;
+                max-width:1100px;
+                justify-content: center; /* Center the grid items horizontally */
+                align-items: center; /* Center the grid items vertically */
+                padding:5px;
+            }
+            
+            /* Add additional styling for individual grid items if needed */
+            .article {
+                text-decoration: none;
+                color: inherit;
+                grid-template-rows: 1fr auto;
+                background-color: #f8f8f8;
+                border-radius: 8px;
+                overflow: hidden;
+                transition: transform 0.2s ease-in-out;
+            }
+            
+            /* Custom styling for the dropdown */
+            .dropdown {
+                list-style: none;
+            }
+
+            .list-item a {
+                cursor: pointer;
+                text-decoration: none;
+            }
+
+            .dropdown-menu {
+                display: none;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                position: absolute;
+                z-index: 1;
+            }
+
+            .dropdown-item {
+                padding: 10px;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+
+            .dropdown-item a {
+                color: #333;
+                text-decoration: none;
+                display: block;
+            }
+
+            .dropdown-item:hover {
+                background-color: #f5f5f5;
+            }
+
+            
+            .title {
+                font-size: 24px;
+                color: #333;
+                padding-block-start: 60px;
+                /* Add any additional styles you want for the title */
+            }
+        </style>
+        <script>
+            function toggleCategoriesDropdown() {
+                var categoriesList = document.getElementById("categoriesList");
+                categoriesList.style.display = (categoriesList.style.display === "block") ? "none" : "block";
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                console.log('Script is executing for blog search.'); // Debugging
+        
+                $('#blog-search-box').on('input', function () {
+                    var query = $(this).val();
+        
+                    // Clear previous suggestions
+                    $('#blog-suggestions-list').empty();
+        
+                    // Make an AJAX request only if the query is not empty
+                    if (query.trim() !== '') {
+                        // Get the form data with CSRF token
+                        var formData = $('#blog-search-form').serialize();
+        
+                        // Make an AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url "blog:post_search" %}',
+                            data: formData,
+                            success: function (data) {
+                                console.log('Received data from server:', data); // Debugging
+        
+                                // Display the suggestions
+                                var suggestionsList = $('#blog-suggestions-list');
+                                $.each(data.suggestions, function (index, suggestion) {
+                                    var listItem = $('<li class="dropdown-item">' + suggestion.title + '</li>');
+                                    suggestionsList.append(listItem);
+        
+                                    // Handle click on suggestion
+                                    listItem.on('click', function () {
+                                        // Fill the search box with the clicked suggestion
+                                        $('#blog-search-box').val(suggestion.title);
+        
+                                        // Hide the suggestions container
+                                        $('#blog-suggestions-container').hide();
+                                    });
+                                });
+        
+                                // Show the suggestions container
+                                $('#blog-suggestions-container').show();
+                            },
+                            error: function (error) {
+                                console.log('Error in AJAX request:', error); // Debugging
+                            }
+                        });
+                    } else {
+                        // Hide the suggestions container if the query is empty
+                        $('#blog-suggestions-container').hide();
+                    }
+                });
+            });
+        </script>
+    
+        <!-- Swiper.js -->
+        <script src="{% static 'JS/swiper-bundle.min.js'%}"></script>
+        <!-- Custom script -->
+        <script src="{% static 'JS/main.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,531 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Book Store{% endblock title %}
+{% block content%}
+<!-- home section starts  -->
+
+<section id="home" class="slider" data-stellar-background-ratio="0.5">
+    <div class="row">
+  
+              <div class="owl-carousel owl-theme">
+                   <div class="item item-first">
+                        <div class="caption">
+                             <div class="container">
+                                  <div class="col-md-8 col-sm-12">
+                                       <h3>Discover the magic between the pages</h3>
+                                       <h1> every book is a doorway to a new world</h1>
+                                       <a href="#menu" class="section-btn btn btn-default smoothScroll">Check out limited books</a>
+                                  </div>
+                             </div>
+                        </div>
+                   </div>
+  
+                   <div class="item item-second">
+                        <div class="caption">
+                             <div class="container">
+                                  <div class="col-md-8 col-sm-12">
+                                       <h3>Your Perfect Bookstore</h3>
+                                       <h1>Explore the shelves of possibility and wander through the corridors of wisdom at our bookstore</h1>
+                                       <a href="#team" class="section-btn btn btn-default smoothScroll">Discover BestSellers</a>
+                                  </div>
+                             </div>
+                        </div>
+                   </div>
+  
+                   <div class="item item-third">
+                        <div class="caption">
+                             <div class="container">
+                                  <div class="col-md-8 col-sm-12">
+                                       <h3>Masterpieces of the Mind A Collection of Timeless Classics</h3>
+                                       <h1>Embark on a literary journey with us, where every book is a portal to new adventures</h1>
+                                       <a href="#featured" class="section-btn btn btn-default smoothScroll">featured books</a>
+                                  </div>
+                             </div>
+                        </div>
+                   </div>
+              </div>
+  
+    </div>
+  </section>  
+<!-- icons section starts  -->
+
+<section id="menu" data-stellar-background-ratio="0.5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12 col-sm-12">
+          <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+            <h1>Limited Offers</h1>
+            <h3>limited offers available at our bookstore</h3>
+          </div>
+        </div>
+  
+        {% for product in limited %}
+        <div class="col-md-4 col-sm-6">
+          <!-- MENU THUMB -->
+          <div class="menu-thumb">
+            <a href="{{ product.get_absolute_url }}" class="" title="{{ product.title }}">
+                {% for image in product.product_image.all %}
+                    {% if image.is_feature %}
+                    <img src="{{ image.image.url }}" class="img-responsive" alt="{{ product.title }}" >
+                    {% endif %}
+                {% endfor %}
+  
+              <div class="menu-info">
+                <div class="menu-item">
+                  <h3>{{ product.title }}</h3>
+                </div>
+                <div class="menu-price">
+                  <span>₹{{ product.discount_price }}</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+  
+      </div>
+    </div>
+  </section>
+  
+
+
+
+<!-- home section ense  -->
+
+
+
+<!-- featured section starts  -->
+
+<section class="featured" id="featured">
+    <h1 class="heading"> <span>featured books</span> </h1>
+
+    <div class="swiper featured-slider">
+        <div class="swiper-wrapper">
+            {% for product in featured %}
+            <div class="swiper-slide box">
+                <div class="icons">
+                    <a href="{{ product.get_absolute_url }}" class="fas fa-eye"></a>
+                </div>
+                <div class="image">
+                    {% for image in product.product_image.all %}
+                        {% if image.is_feature %}
+                        <img src="{{ image.image.url }}" class="img-responsive" alt="{{ product.title }}" >
+                        {% endif %}
+                    {% endfor %}
+                    <a href="" class="product"></a>
+                </div>
+                <div class="content">
+                    <h3>{{ product.title }}</h3>
+                    <div class="price">₹{{ product.discount_price }} <span>₹{{product.regular_price}}</span></div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+</section>
+
+<!-- featured section ends -->
+
+<!-- newsletter section starts -->
+
+<section class="newsletter">
+
+
+</section>
+
+<!-- newsletter section ends -->
+
+<!-- arrivals section starts  -->
+
+<section class="arrivals" id="arrivals">
+
+    <h1 class="heading"> <span>New Arrivals</span> </h1>
+
+    <div class="swiper arrivals-slider">
+        
+
+        <div class="swiper-wrapper">
+            {% for product in new_arrivals %}
+
+            <a href="{{ product.get_absolute_url }}" class="swiper-slide box">
+                <div class="image">
+                    {% for image in product.product_image.all %}
+                        {% if image.is_feature %}
+                        <img src="{{ image.image.url }}" class="img-responsive" alt="{{ product.title }}" >
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="content">
+                    <h3>{{ product.title}}</h3>
+                    <div class="price">₹{{ product.discount_price }} <span>₹{{product.regular_price}}</span></div>
+                </div>
+            </a>
+        
+            {% endfor %}
+            
+
+        </div>
+        
+
+    </div>
+
+</section>
+
+<!-- arrivals section ends -->
+<section id="team" data-stellar-background-ratio="0.5">
+  <div class="container">
+       <div class="row">
+            <div class="col-md-12 col-sm-12">
+                 <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+                      <h1>Bestsellers in Books</h1>
+                      <h4>Our most popular products based on sales. Updated frequently.
+                      </h4>
+                 </div>
+            </div>
+            {% for product in BestSellers %}
+
+            <div class="col-md-4 col-sm-4">
+                 <div class="team-thumb wow fadeInUp" data-wow-delay="0.2s">
+                        {% for image in product.product_image.all %}
+                            {% if image.is_feature %}
+                            <img src="{{ image.image.url }}" class="img-responsive" alt="{{ product.title }}" >
+                            {% endif %}
+                        {% endfor %}
+                           <div class="team-hover">
+                                <div class="team-item">
+                                     <h4>{{ product.title }}</h4> 
+                                     <ul class="social-icon">
+                                          <li><a href="{{ product.get_absolute_url }}" class="fas fa-search"></a></li>
+                                          
+                                     </ul>
+                                </div>
+                           </div>
+                 </div>
+                 <div class="team-info">
+                      <h3>{{ product.title }} </h3>
+                      <h6>₹{{ product.discount_price }}</h6>
+                 </div>
+            </div>
+            
+            {% endfor %}
+       </div>
+  </div>
+</section>
+
+
+<!-- deal section starts  -->
+
+<section id="testimonial" data-stellar-background-ratio="0.5">
+  <div class="overlay"></div>
+  <div class="container">
+       <div class="row">
+
+            <div class="col-md-12 col-sm-12">
+                 <div class="section-title wow fadeInUp" data-wow-delay="0.1s">
+                      <h2>Testimonials</h2>
+                 </div>
+            </div>  
+
+            <div class="col-md-offset-2 col-md-8 col-sm-12">
+                 <div class="owl-carousel owl-theme">
+                      <div class="item">
+                           <p>"I've never experienced a bookstore quite like this! The carefully curated selection at bookstore is a haven for book lovers. Each visit is a new adventure, and I always leave with a hidden gem that becomes a cherished favorite."</p>
+                                <div class="tst-author">
+                                     <h4>Jane K.</h4>
+                                     <span>- avid reader:</span>
+                                </div>
+                      </div>
+
+                      <div class="item">
+                           <p>"As someone who values knowledge, bookstore has become my go-to place. The diversity of genres and the knowledgeable staff make it a haven for anyone eager to expand their mind. It's not just a bookstore; it's a gateway to endless possibilities."</p>
+                                <div class="tst-author">
+                                     <h4>David M.</h4>
+                                     <span> - lifelong learner:</span>
+                                </div>
+                      </div>
+
+                      <div class="item">
+                           <p>"There's a magic about this bookstore that transcends the ordinary. The ambiance, the selection, and the passion for literature make it my happy place. It's not just a bookstore; it's a sanctuary for fellow book enthusiasts."</p>
+                                <div class="tst-author">
+                                     <h4>Emily R. - literary enthusiast:</h4>
+                                     <span>- literary enthusiast:</span>
+                                </div>
+                      </div>
+
+                 </div>
+            </div>
+
+       </div>
+  </div>
+</section>
+
+<!-- deal section ends -->
+
+<!-- reviews section starts  -->
+<!-- reviews section starts  -->
+
+<section class="reviews" id="reviews">
+
+    <h1 class="heading"> <span>client's reviews</span> </h1>
+
+    <div class="swiper reviews-slider">
+
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide box">
+                <img src="/media/images/pexels-photo-220453.webp" alt="">
+                <h3>Mr. J D Clay</h3>
+                <p>(The Basics of Filmmaking: Screenwriting, Producing, Directing, Cinematography, Audio, & Editing)Got this book in 2029 good basics on scripting and editing good length 170 pages biggest flaw was the high price at Rs. 2800 very informative reading and goes well along. Side cinematography for directors 2nd edition at 300 pages for under Rs 3000 good on theory and approaching the repetitive tasks like editing and good new book.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <img src="/media/images/pexels-photo-2379004.jpeg" alt="">
+                <h3>Rohan</h3>
+                <p>(THE STRANGER IN THE MIRROR)The most passionate and resonating chapters for me were pertaining to RDB, the love story of ROM and Bharathi and Delhi-6.
+
+                    Imagine if this man...the word integrity comes very often as an adjective for him from the people who know him.....becomes part of a functional Government of India.... Lets people do their best... Enables people to WANT to do their best.. Facilitates an environment for people to flourish..
+                    
+                    That is the very definition of a leader we need at this moment of history in India.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <img src="/media/images/pexels-photo-5378700.webp" alt="">
+                <h3>Nabeel rashid</h3>
+                <p>I bought about 10 coloring books for adults. I am an artist, so I don't really need these but the whole hype about coloring books being relaxing was what I wanted to test. Turns out, these copy colouring books are fantastic because you don't really need to use your brain much. You can just color while you are taking a tea break and thinking some thoughts. It works! Also, the quality of the pages of this book are pretty good.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+            <div class="swiper-slide box">
+                <img src="/media/images/pexels-photo-1102341.webp" alt="">
+                <h3>Miss Mendy</h3>
+                <p>(Camera Assistant's Manual)I bought this book when I was hired to AC for a project on equipment I had never worked with before. For one of those, "Holly crap! I agreed to do a job I only know how to do part of!" moments, this book is great. Every question I could think of was answered thoroughly and I mean THOROUGHLY. If you want to learn exactly what the responsibilities of an Assistant Camera Person are and how best to execute them read this book! If you are a working AC and want an easy to read, text-book style reference this is it.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <img src="/media/images/pexels-photo-1212984.webp" alt="">
+                <h3>Dalal Prem</h3>
+                <p>(Green Lights)This book is different from everything you think it is. It's written in a very unconventional way and that is what makes it such a good read. The stories describe the journey of a man who is simple, humble and had the courage to write down and share his life with people.
+                    An amazing read, I will recommend it for sure.</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <img src="/media/images/portrait-photography-profile-face-one-38289.jpeg" alt="">
+                <h3>Deepa</h3>
+                <p>Very nice
+                    Would like to go for it in future
+                    Paper quality is very smooth and satin
+                    Live it
+                    Its an experience</p>
+                <div class="stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+</section>
+
+<!-- reviews section ends -->
+
+<!-- blogs section starts  -->
+
+<section class="blogs" id="blogs">
+
+    <h1 class="heading"> <span>our blogs</span> </h1>
+
+    <div class="swiper blogs-slider">
+
+        <div class="swiper-wrapper">
+
+            <div class="swiper-slide box">
+                <div class="image">
+                    <img src="/media/images/India_Air_Pollution_14005.jpg" alt="">
+                </div>
+                <div class="content">
+                    <h3>India Plans to Change the Weather to Fight Back Against Deadly Smog</h3>
+                    <p>
+
+                        India’s capital, New Delhi, is preparing a new weapon in the fight against deadly air pollution: cloud seeding. The experiment, which could take place as early as next week, would introduce chemicals like silver iodide into a cloudy sky to create rain and, it’s hoped, wash away the fine particulate matter hovering over one of the world’s largest cities. The need is desperate. Delhi has already tried traffic restriction measures, multimillion-dollar air filtration towers, and the use of fleets of water-spraying trucks to dissolve the particulate matter in the air—but to no avail. The use of cloud seeding, if it goes ahead, would be controversial.
+                        
+                    </p>
+                    <a href="{% url 'blog:homepage' %}" class="btn">read more</a>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <div class="image">
+                    <img src="/media/images/intel-ai.webp" alt="">
+                </div>
+                <div class="content">
+                    <h3>Intel looks at AI as a tool that solves everyday problems, says VP Alexis Crowell</h3>
+                    <p>AI is not just deep learning or generative learning, it is so much more,” said Alexis Crowell, vice president and CTO of Asia pacific and Japan, Intel. At Intel ConnectiON 2023, held in Bengaluru on Wednesday, the silicon behemoth showcased various real-world products and solutions powered by artificial intelligence. During the keynote, the company announced that it has collaborated with Cochin University of Science and Technology to use generative AI in cancer screening, which has resulted in 98 per cent accuracy in detecting cancer. “Intel looks at artificial intelligence as a tool, which has to underpin all of these businesses and societal problems that we face on an everyday basis.</p>
+                    <a href="{% url 'blog:homepage' %}" class="btn">read more</a>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <div class="image">
+                    <img src="/media/images/Sea-worm-20231125.jpg" alt="">
+                </div>
+                <div class="content">
+                    <h3>This sea worm’s ‘butt’ swims away to reproduce. Now, researchers know why</h3>
+                    <p>Truth can be stranger than fiction, especially when it comes to the animal kingdom. Some annelid worms or segmented worms reproduce with a process called stolonisation, where the posterior part of their body with reproductive parts detach from the original body. That detached part is called the stolon, and it swims around by itself and spawns when it meets the opposite sex. For it to be able to swim by itself, it needs to develop its own eyes, antennae and swimming bristles while still attached to the original body. But that has been perplexing scientists for quite a while—how does the “stolon head”</p>
+                    <a href="{% url 'blog:homepage' %}" class="btn">read more</a>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <div class="image">
+                    <img src="/media/images/cRRqZguM2iX38GsQppG3q6-650-80.jpg.webp" alt="">
+                </div>
+                <div class="content">
+                    <h3>NASA to train an Indian astronaut for ISS mission</h3>
+                    <p>US space agency NASA will train an Indian astronaut for a mission to the International Space Station by the end of 2024, said the organisation’s administrator Bill Nelson during his Delhi visit. Terming India as a “great future partner”, Nelson said that US would be open to collaborate on an Indian Space Station. The Prime Minister called on Isro scientists to set up an Indian Space Station by 2035 and send an Indian to the moon by 2040</p>
+
+                    </p>
+                    <a href="{% url 'blog:homepage' %}" class="btn">read more</a>
+                </div>
+            </div>
+
+            <div class="swiper-slide box">
+                <div class="image">
+                    <img src="/media/images/Planets-in-sync-20231130.jpg" alt="">
+                </div>
+                <div class="content">
+                    <h3>
+                        Scientists discover rare system with 6 planets orbiting in sync</h3>
+                    <p>00:00 1x 1.5x 1.8x Astronomers have discovered an exceptionally rare phenomenon in a nearby star system — six planets that orbit their central star in sync with a rhythm. The planets move around in a pattern so precise that it can be set to music. The six planets orbit a star called HD110067, which is about 100 light-years away from the Earth in the northern constellation of Coma Berenices. NASA’s Transiting Exoplanet Survey Satellite (TESS) in 2020 detected the star’s brightness dipping, indicating that planets were passing in front of it</p>
+                    <a href="{% url 'blog:homepage' %}" class="btn">read more</a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- blogs section ends -->
+
+
+
+<!-- footer section ends -->
+
+<!-- loader  -->
+
+
+<style>
+    /* Styles for smaller screens (e.g., mobile) */
+    @media only screen and (max-width: 767px) {
+        .menu-thumb img,
+        .featured-slider img,
+        .arrivals-slider img,
+        .team-thumb img {
+            width: 100%;
+            height: auto;
+        }
+    
+        /* Adjust font size for smaller screens */
+        h1 {
+            font-size: 1.2em;
+        }
+    
+        h3 {
+            font-size: 1.1em;
+        }
+    
+        h4 {
+            font-size: 1em;
+        }
+    
+        h6 {
+            font-size: 0.9em;
+        }
+    }
+        /* Styles for smaller screens (e.g., mobile) */
+    @media only screen and (max-width: 767px) {
+        .menu-thumb img,
+        .featured-slider img,
+        .arrivals-slider img,
+        .team-thumb img {
+            width: 100%;
+            height: auto;
+        }
+    }
+
+    /* Styles for larger screens */
+    @media only screen and (min-width: 768px) {
+        .menu-thumb img,
+        .featured-slider img,
+        .arrivals-slider img,
+        .team-thumb img {
+            /* Adjust the max-width as needed */
+            max-width: 100%; 
+            height: auto;
+        }
+    }
+</style>
+
+
+
+
+
+
+
+
+<script src="https://unpkg.com/swiper@7/swiper-bundle.min.js"></script>
+<script src="{% static 'JS/jquery.js' %}"></script>
+<script src="{% static 'JS/bootstrap.min.js' %}"></script>
+<script src="{% static 'JS/jquery.stellar.min.js' %}"></script>
+<script src="{% static 'JS/wow.min.js' %}"></script>
+<script src="{% static 'JS/owl.carousel.min.js' %}"></script>
+<script src="{% static 'JS/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'JS/smoothscroll.js' %}"></script>
+<script src="{% static 'JS/custom.js' %}"></script>
+
+<!-- custom js file link  -->
+<script src="{% static 'JS/scripts.js' %}"></script>
+
+
+{% endblock content %}

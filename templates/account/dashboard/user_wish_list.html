@@ -1,0 +1,114 @@
+{% extends "../sub_base.html" %}
+{% block title %}Users Wish List{% endblock %}
+
+{% block sub_content %}
+<div class="col-10 mx-auto">
+  <h1 class="h3">My Wishlist</h1>
+  <div>Manage your Wishlist</div>
+  <hr />
+
+  {% if wishlist %}
+  {% for product in wishlist  %}
+  
+  <div class="card mb-3 rounded-0">
+    <div class="row g-0">
+      <div class="col-md-2">
+        {% for image in product.product_image.all  %}
+          {% if image.is_feature %}
+          <img class="img-fluid d-block p-2" width="135px" src="{{ image.image.url }}"
+            alt="{{ image.image.alt_text }}" />
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="col-md-10">
+        <div class="card-body">
+          <h5 class="card-title">{{product.title}}</h5>
+          <p class="card-text">{{product.description}}</p>
+          <p class="card-text"><small class="text-muted">₹{{product.discount_price}}</small></p>
+          <a type="button" class="btn btn-primary fw500 btn-sm" href="{% url 'account:user_wishlist' product.id %}">Remove from Wishlist</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endfor %}
+  {% else %}
+  <p class="card-text">No products have been added to your wishlist yet</p>
+  {% endif %}
+
+<style>
+  .h3 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  /* Card styles */
+  .card {
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .card img {
+    max-width: 100%;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .card-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+  }
+  
+  .card-text {
+    font-size: 1.5rem;
+    color: #555;
+  }
+  
+  .card-text small {
+    font-size: 1.5rem;
+  }
+  
+  /* Button styles */
+  .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0056b3;
+  }
+  
+  .btn-sm {
+    font-size: 1.5rem;
+  }
+  
+  .btn-fw500 {
+    font-weight: 500;
+  }
+  
+  /* Card hover effect */
+  .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .col-md-2 {
+      text-align: center;
+    }
+  
+    .col-md-10 {
+      text-align: left;
+    }
+  }
+</style>
+</div>
+
+{% endblock %}

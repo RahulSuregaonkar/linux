@@ -1,0 +1,471 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+        rel="stylesheet"  type='text/css'>
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/fontawesome.min.css" integrity="sha512-cHxvm20nkjOUySu7jdwiUxgGy11vuVPE9YeK89geLMLMMEOcKFyS2i+8wo0FOwyQO/bL8Bvq1KMsqK4bbOsPnA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <script src="https://kit.fontawesome.com/b58ded800f.js" crossorigin="anonymous"></script>
+    
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+        <title>{% block title %}rahul book store web app{% endblock title %}</title>
+    
+        {% load static %}
+        
+    
+        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    
+        <!-- font awesome cdn link  -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    
+        <!-- custom css file link  -->
+        <link rel="stylesheet"  href="{% static '/css/book_store1.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/bootstrap.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/owl.carousel.min.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/owl.theme.green.min.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/font-awesome.min.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/bootstrap.min1.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/font-awesome.min.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/animate.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/owl.carousel.css' %}">
+        <link rel="stylesheet"  href="{% static '/css/magnific-popup.css' %}">
+        
+               
+          
+   
+        <!-- MAIN CSS -->
+        <link rel="stylesheet" href="{% static '/css/template2.css' %}">
+        
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.all.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.7.2/dist/sweetalert2.min.css"></script>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+
+        <link rel="stylesheet" href="https://unpkg.com/swiper@7/swiper-bundle.min.css" />
+    
+    </head>
+    <body>
+    <style>
+        
+    </style>   
+
+    
+        
+    <!-- header section starts  -->
+    
+    <header class="header">
+      <div>
+        <div class="header-1">
+            <a href="http://127.0.0.1:8000/" class="logo"> <i class=""></i> book store </a>
+    
+            <div class="search-form-container">
+              <form class="search-form" action="{% url 'store:search' %}" id="search-form">
+                {% csrf_token %}
+                <input type="search" name="q" placeholder="search here..." id="search-box">
+                <button type="button" id="search-button">
+                    <img src="/media/images/icons8-search-80.png" alt="Search icon">
+                </button>
+              </form>
+              <div id="suggestions-container" class="dropdown">
+                <ul id="suggestions-list" class="new_dropdown" aria-labelledby="">
+                    
+                </ul>
+              </div>
+            </div>
+
+            
+            {% if user.is_authenticated %}
+              {% if addresses|length == 0 %}
+              <a class="box1" href="{% url 'account:add_address' %}"><p>add address <i class="fas fa-map-marker-alt"></i></p></a>
+              {% endif %}
+
+              {% for address in addresses %}
+                {% if address.default %}
+                <a href="{% url 'account:addresses' %}" class="box1">
+                  <p>delivering to {{address.town_city}} <br> {{address.postcode}} <i class="fas fa-map-marker-alt"></i></p>
+                </a>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            <div class="icons">
+                
+                <div id="search-btn" class="fas fa-search"></div>
+                
+                <a href="{% url "account:wishlist" %}" class="fas fa-heart"></a>
+                {% with total_qty=basket|length %}
+                    {% if total_qty > 0 %}
+                    <a  type="button" role="button" href="{% url 'basket:basket_summary' %}" id="basket-qty" class="fas fa-shopping-cart" ><span class="count">{{ total_qty }}</span></a>
+
+                    {% else %}
+                    <a  type="button" role="button" href="{% url 'basket:basket_summary' %}" id="basket-qty" class="fas fa-shopping-cart" ><span class="count">0</span></a>
+                    {% endif %}
+                {% endwith %}
+                <a id="login-btn"  class="fa-solid fa-bars"></a>
+            </div>
+            <div id="profile-image-container">
+              {% if user.is_authenticated %}
+                  <a href="#" onclick="redirectToUserProfile()">
+                      <img src="{{ user.profile.avatar.url }}" width="50" height="50" class="rounded-circle">
+                  </a>
+              {% else %}
+                  <a href="#" onclick="redirectToUserProfile()">
+                      <img src="https://png.pngtree.com/png-clipart/20230102/original/pngtree-3d-boy-head-portrait-png-image_8855190.png" width="40" height="40" class="rounded-circle">
+                  </a>
+              {% endif %}
+          </div>
+        </div>
+
+        <div class="header-2">
+            <nav class="navbar">
+                <a href="{% url 'store:all_products' %}">home</a>
+                <a href="{% url 'store:all_products_in_product_page' %}">books</a>
+                <a href="{% url "blog:homepage" %}">blogs</a>
+                <a href="{% url "sellbook:homepage" %}">used books</a>
+            </nav>
+
+        </div>
+      </div> 
+      <p id="timerMessage">Time remaining: <span id="timerValue">600</span> seconds</p>
+    </header>
+    
+    <!-- header section ends -->
+    
+    <!-- bottom navbar  -->
+    
+    <nav class="bottom-navbar">
+        <a href="{% url "store:all_products" %}" class="fas fa-home"></a>
+        <a href="{% url 'store:all_products_in_product_page' %}" class="fas fa-list"></a>
+        <a href="{% url 'basket:basket_summary' %}" class="fas fa-shopping-cart"></a>
+        <a href="{% url 'account:dashboard' %}" class="fas fa-user"></a>
+        <a href="#" id="menu-icon"><i class="fa-solid fa-filter"></i></a>
+    </nav>
+    
+    
+    <!-- login form  -->
+    
+    <div class="login-form-container">
+    
+        <div id="close-login-btn" class="fas fa-times"></div>
+    
+        <nav class="navbar">
+          <ul class="navbar__menu">
+            <li class="navbar__item">
+              <a href="{% url 'account:dashboard' %}" class="navbar__link"><i data-feather="home"></i><span>Dashboard</span></a>
+            </li>
+            <li class="navbar__item">
+              <a href="{% url 'account:users-profile'%}" class="navbar__link"><i data-feather="message-square"></i><span>Profile</span></a>        
+            </li>
+            <li class="navbar__item">
+              <a href="{% url 'account:login' %}" class="navbar__link"><i data-feather="users"></i><span>Log in</span></a>        
+            </li>
+            <li class="navbar__item">
+              <a id="logoutBtn" href="{% url 'account:logout' %}" class="navbar__link"><i data-feather="folder"></i><span>Log out</span></a>        
+            </li>
+            <li class="navbar__item">
+              <a href="{% url 'sellbook:mybooks' %}" class="navbar__link"><i data-feather="archive"></i><span>my books</span></a>        
+            </li>
+            <li class="navbar__item">
+              <a href="{% url "sellbook:mysoldbooks" %}" class="navbar__link"><i data-feather="help-circle"></i><span>sold books</span></a>        
+            </li>
+            <li class="navbar__item">
+              <a href="{% url "account:user_orders"%}" class="navbar__link"><i data-feather="settings"></i><span>your orders</span></a>        
+            </li>
+          </ul>
+        </nav>
+
+    </div>
+
+    <div id = 'content'> 
+    {% block content %}
+        
+
+
+
+
+
+    {% endblock content %}
+        
+    </div>
+    <div>
+        <br>
+    
+        <div id = "footer">
+          <section class="footer">
+          
+          <div class="box-container">
+            
+            <div class="box">
+                        <h3>our locations</h3>
+                        <a href="#"> <i class="fas fa-map-marker-alt"></i> india </a>
+            
+            </div>
+            
+            <div class="box">
+                        <h3>quick links</h3>
+                        <a href="{% url 'store:all_products' %}"> <i class="fas fa-arrow-right"></i> home </a>
+                        <a href="{% url 'account:user_orders' %}"> <i class="fas fa-arrow-right"></i> orders </a>
+                        <a href="{% url 'account:users-profile' %}"> <i class="fas fa-arrow-right"></i> profile </a>
+                        <a href="{% url 'account:dashboard' %}"> <i class="fas fa-arrow-right"></i> Dashboard </a>
+                        <a href="{% url 'blog:homepage' %}"> <i class="fas fa-arrow-right"></i> blogs </a>
+            </div>
+            
+            <div class="box">
+                        <h3>extra links</h3>
+                        <a href="{% url 'account:edit_details' %}"> <i class="fas fa-arrow-right"></i>edit account info </a>
+                        <a href="{% url 'sellbook:homepage' %}"> <i class="fas fa-arrow-right"></i> used books </a>
+                        <a href="{% url 'account:addresses'%}"> <i class="fas fa-arrow-right"></i> address</a>
+            </div>
+            
+            <div class="box">
+                        <h3>contact info</h3>
+                        <a href="#"> <i class="fas fa-phone"></i> 7676934868</a>
+                        <a href="#"> <i class="fas fa-phone"></i> 8884089751 </a>
+                        <a href="#"> <i class="fas fa-envelope"></i> rahulsuregaonkar@gmail.com </a>
+                    </div>
+                    
+            </div>
+            
+            <div class="share">
+                    <a href="#" class="fab fa-facebook-f"></a>
+                    <a href="#" class="fab fa-twitter"></a>
+                    <a href="#" class="fab fa-instagram"></a>
+                    <a href="#" class="fab fa-linkedin"></a>
+                    <a href="#" class="fab fa-pinterest"></a>
+            </div>
+          
+            
+          </section>
+        
+        </div>
+      
+    </div>
+    <style>
+        .search-form {
+            display: flex;
+          }
+          
+          #search-box {
+            flex: 1;
+          }
+          
+          #search-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+          }
+          
+    </style>
+    <script>
+                // Add event listener to the search button
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchTerm = document.getElementById('search-box').value;
+
+            if (searchTerm.trim() === '') {
+                alert('Please type something to search.');
+                return; // Stop further execution if search term is empty
+              }
+            // Perform the search action with the search term (e.g., redirect to a search results page)
+            // Replace this with your actual search functionality
+            const searchForm = document.querySelector('.search-form');
+            searchForm.submit();
+        });
+    </script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const loginBtn = document.getElementById('login-btn');
+        const menuContainer = document.querySelector('.menu-container');
+    
+        loginBtn.addEventListener('click', function () {
+            menuContainer.classList.toggle('active');
+        });
+    });
+
+    function redirectToUserProfile() {
+      // Replace the URL with your actual URL
+      window.location.href = "{% url 'account:users-profile' %}";
+    }
+    
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        // Get the current page URL
+        var currentPageURL = window.location.href;
+  
+        // URL of the product page
+        var productPageURL = "http://127.0.0.1:8000/product_page";
+        var product_pageUrl = "http://127.0.0.1:8000/product_page#"
+  
+        // Check if the current page is the product page
+        if (currentPageURL !== productPageURL) {
+          // Hide the last link (menu-icon) on pages other than the product page
+          document.getElementById("menu-icon").style.display = "none";
+        }
+        if (currentPageURL == product_pageUrl) {
+          // Hide the last link (menu-icon) on pages other than the product page
+          document.getElementById("menu-icon").style.display = "flex";
+        }
+        if (currentPageURL == productPageURL) {
+          // Hide the last link (menu-icon) on pages other than the product page
+          document.getElementById("menu-icon").style.display = "flex";
+        }
+      });
+    </script>
+    <script>
+      $(document).ready(function () {
+          $('#search-box').on('input', function () {
+              var query = $(this).val();
+  
+              // Clear previous suggestions
+              $('#suggestions-list').empty();
+  
+              // Make an AJAX request only if the query is not empty
+              if (query.trim() !== '') {
+                  // Get the form data with CSRF token
+                  var formData = $('#search-form').serialize();
+  
+                  // Make an AJAX request
+                  $.ajax({
+                      type: 'POST',
+                      url: '{% url "store:search" %}',
+                      data: formData,
+                      success: function (data) {
+                          // Display the suggestions
+                          var suggestionsList = $('#suggestions-list');
+                          console.log(suggestionsList)
+                          $.each(data.suggestions, function (index, suggestion) {
+                              var listItem = $('<li class="dropdown-item">' + suggestion.title + '</li>');
+                              suggestionsList.append(listItem);
+  
+                              // Handle click on suggestion
+                              listItem.on('click', function () {
+                                  // Do something when a suggestion is clicked, e.g., redirect to the product page
+                                  $('#search-box').val(suggestion.title);
+
+                                  // Hide the suggestions container
+                                  $('#suggestions-container').hide();
+                              });
+                          });
+  
+                          // Show the suggestions container
+                          $('#suggestions-container').show();
+                      },
+                      error: function (error) {
+                          console.log(error);
+                      }
+                  });
+              } else {
+                  // Hide the suggestions container if the query is empty
+                  $('#suggestions-container').hide();
+              }
+          });
+      });
+    </script>
+
+    <style>
+      .new_dropdown {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border: 1px solid #ddd;
+        max-height: 200px;
+        overflow-y: auto;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white background */
+        z-index: 1000;
+    }
+    
+    .new_dropdown li {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+    
+    .new_dropdown li:last-child {
+        border-bottom: none;
+    }
+    
+    .new_dropdown li:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .new_dropdown a {
+        text-decoration: none;
+        color: #333;
+        display: block;
+    }
+    
+    .new_dropdown a:hover {
+        color: #007bff;
+    }
+    
+    </style>
+    <script>
+      var timeInSeconds = 600;
+      var timer;
+  
+      function updateTimerMessage() {
+          document.getElementById("timerValue").textContent = timeInSeconds;
+      }
+  
+      function startTimer() {
+          timer = setInterval(function () {
+              timeInSeconds--;
+  
+              updateTimerMessage();
+  
+              if (timeInSeconds <= 0) {
+                  clearInterval(timer);
+                  autoLogout(); // Auto logout when the timer reaches zero
+              }
+          }, 1000);
+      }
+  
+      function autoLogout() {
+          // You can add any additional logic here before triggering the click
+          // For example, clearing the session/token, displaying a message, etc.
+          alert('Logging out');
+          // Trigger the click on the logout button
+          var logoutBtn = document.getElementById('logoutBtn');
+          if (logoutBtn) {
+              logoutBtn.click();
+          }
+      }
+  
+      // Check if the user is authenticated before starting the timer
+      var isAuthenticated = {% if user.is_authenticated %}true{% else %}false{% endif %};
+      if (isAuthenticated) {
+          startTimer();
+      }
+  
+      // Add an event listener to the logout button
+      var logoutBtn = document.getElementById('logoutBtn');
+      if (logoutBtn) {
+          logoutBtn.addEventListener('click', function () {
+              clearInterval(timer); // Stop the timer when the user manually logs out
+              logout();
+          });
+      }
+  
+      document.addEventListener("DOMContentLoaded", function () {
+          // You can add any additional initialization logic here
+      });
+    </script>
+</body>
+
+<script src="{% static 'JS/scripts.js' %}"></script>
+</html>

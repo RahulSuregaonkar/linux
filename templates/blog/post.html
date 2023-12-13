@@ -1,0 +1,1134 @@
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NewsFlash | Post</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon.png">
+    <!-- Remix icons -->
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+    <!-- Swiper.js styles -->
+    <link rel="stylesheet" href="{% static '/css/swiper-bundle.min.css' %}"/>
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="{% static '/css/blog2.css' %}">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" 
+    rel="stylesheet"  type='text/css'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-qVyh7zgFvE2+nUcAH63U+R0+vzbNtHe2e0d4g+RlqEFad2u1w9mlC4e7akrqpXbhavdg7S5UksifTw7s2kO5Bg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="navbar container">
+            <a href="{% url "blog:homepage" %}">
+                <h2 class="logo">Blogs</h2>
+            </a>
+
+            <div class="menu" id="menu">
+                <ul class="list">
+                    <li class="list-item">
+                        <a href="{% url "blog:homepage" %}" class="list-link current">Home</a>
+                    </li>
+                    <div class="col-12 pb-5">
+                        <ul class="dropdown">
+                            <li class="list-item" id="categoriesDropdown">
+                                <a href="#" onclick="toggleCategoriesDropdown()">Categories</a>
+                                <ul class="dropdown-menu" id="categoriesList">
+                                    {% for category in category_list %}
+                                        <li class="dropdown-item"><a href="/blog/category/{{category.name}}">{{ category.name }}</a></li>
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>   
+                    <li class="list-item">
+                        <a href="{% url "blog:all_blog" %}" class="list-link">all blogs</a>
+                    </li>
+                    <li class="list-item screen-lg-hidden">
+                        <a href="{% url "account:login" %}" class="list-link">log in</a>
+                    </li>
+                    <li class="list-item screen-lg-hidden">
+                        <a href="{% url "account:register" %}" class="list-link">Sign up</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="list list-right">
+                <button class="btn place-items-center" id="theme-toggle-btn">
+                    <i class="ri-sun-line sun-icon"></i>
+                    <i class="ri-moon-line moon-icon"></i>
+                </button>
+
+                <button class="btn place-items-center" id="search-icon">
+                    <i class="ri-search-line"></i>
+                </button>
+
+                <button class="btn place-items-center screen-lg-hidden menu-toggle-icon" id="menu-toggle-icon">
+                    <i class="ri-menu-3-line open-menu-icon"></i>
+                    <i class="ri-close-line close-menu-icon"></i>
+                </button>
+
+                <a href="{% url "account:login" %}" class="list-link screen-sm-hidden">log in</a>
+                <a href="{% url "account:register" %}" class="btn sign-up-btn fancy-border screen-sm-hidden">
+                    <span>Sign up</span>
+                </a>
+            </div>
+
+        </nav>
+    </header>
+
+    <!-- Search -->
+    <div class="search-form-container container" id="search-form-container">
+
+        <div class="form-container-inner">
+
+            <form action="/blog/search/" method="get" class="form" id="blog-search-form">
+                {% csrf_token %}
+                <input class="form-input" name="q" type="search" placeholder="What are you looking for?" id="blog-search-box">
+                <div id="blog-suggestions-container" class="dropdown">
+                </div>
+                <button class="btn form-btn" type="submit">
+                    <i class="ri-search-line"></i>
+                </button>
+
+            </form>
+            <ul id="blog-suggestions-list" class="new_dropdown" aria-labelledby="">
+                <!-- Suggestions will be added dynamically here -->
+            </ul>
+            <span class="form-note">Or press ESC to close.</span>
+
+        </div>
+
+        <button class="btn form-close-btn place-items-center" id="form-close-btn">
+            <i class="ri-close-line"></i>
+        </button>
+
+    </div>
+
+    <section class="blog-post section-header-offset">
+        
+        <div class="blog-post-container container">
+            <div class="blog-post-data">
+                <h3 class="title blog-post-title">{{ post.title }}</h3>
+                <div class="article-data">
+                    <span>Dec 6th 2021</span>
+                    <span class="article-data-spacer"></span>
+                    <span>4 Min read</span>
+                </div>
+                <div class = "article swiper-slide">
+                <img src="{{ post.image.url }}" alt="">
+                </div>
+            </div>
+
+            <div class="container">
+                <p>
+                    {{ post.content }}
+                </p>
+                
+
+                <blockquote class="quote">
+                    <p><span><i class="ri-double-quotes-l"></i></span>{{ post.excerpt }}<span><i class="ri-double-quotes-r"></i></span></p>
+                </blockquote>
+            
+
+                {% with allcomments as total_comments %}
+                <h2>Ratings</h2>
+                
+                <h2>
+                ({{ total_comments }} review{{ total_comments|pluralize }})
+                </h2>
+                {% endwith %}
+                <div class="rating-star">  
+                    <h3>{{ post.average_rating|floatformat:2 }}/5</h3>
+                    <div class="star-rating">
+                        <i class="fa fa-star{% if post.average_rating < 0.5 %}-o{% elif post.average_rating >= 0.5 and post.average_rating < 1 %}-half-o{% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if post.average_rating < 1.5 %}-o{% elif post.average_rating >= 1.5 and post.average_rating < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if post.average_rating < 2.5 %}-o{% elif post.average_rating >= 2.5 and post.average_rating < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if post.average_rating < 3.5 %}-o{% elif post.average_rating >= 3.5 and post.average_rating < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
+                        <i class="fa fa-star{% if post.average_rating < 4.5 %}-o{% elif post.average_rating >= 4.5 and post.average_rating < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+        
+    </section>
+    <section>
+        <div class="card" id="comments-container">
+            <div id="nissan_nismo">
+                <div class="">
+                    <div class="">
+                        <div class="">
+                            <h1>Reviews</h1>
+                            <div class="mt-2">
+                                {% load mptt_tags %}
+                                {% recursetree comments %}
+                                <div class="d-flex flex-row p-3" id="{{ node.id }}">
+                                    <div class="w-100">
+                                        <img src="{{ node.image.avatar.url }}" width="40" height="40" class="rounded-circle mr-3">
+                                        <div class="">
+                                            <h4 class="">{{ node.name }}</h4>
+                                            <small><p class="c-badge">top comment</p></small>
+                                        </div>
+                                    </div>
+                                    <h3 class="text-justify comment-text mb-0">rated {{ node.rate }}/5</h3>
+                                    <h3 class="text-justify comment-text mb-0">{{ node.content }}</h3>
+                                    <div class="d-flex flex-row user-feed">
+                                        {% if node.rate > 0 %}
+                                        <label class="rating-star">
+                                            <br>
+                                            <div class="star-rating">
+                                                <i class="fa fa-star{% if node.rate < 0.5 %}-o{% elif node.rate >= 0.5 and node.rate < 1 %}-half-o{% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if node.rate < 1.5 %}-o{% elif node.rate >= 1.5 and node.rate < 2 %}-half-o{% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if node.rate < 2.5 %}-o{% elif node.rate >= 2.5 and node.rate < 3 %}-half-o{% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if node.rate < 3.5 %}-o{% elif node.rate >= 3.5 and node.rate < 4 %}-half-o{% endif %}" aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if node.rate < 4.5 %}-o{% elif node.rate >= 4.5 and node.rate < 5 %}-half-o{% endif %}" aria-hidden="true"></i>
+                                            </div>
+                                        </label>
+                                        {% endif %}
+                                        <span class="wish"><i class="fa fa-heartbeat mr-2"></i>{{ node.publish }}</span>
+                                        <span class="ml-3"><i class="fa fa-comments-o mr-2"></i></span>
+                                    </div>
+                                    {% if node.level < 1 %}
+                                    {% if user.is_authenticated %}
+                                    <button class='btn btn-primary btn-sm' onclick="myFunction({{ node.id }})">Reply</button>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% if node.name|stringformat:"s" == user_name %}
+                                    <button class="btn btn-secondary" onclick="deleteComment({{ node.id }})">Delete</button>
+                                    {% endif %}
+                                    <div class="">
+                                        {% if not node.is_leaf_node %}
+                                        <div class="children pl-2 pl-md-5">
+                                            {{ children }}
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                    </hr>
+                                </div>
+                                {% endrecursetree %}
+                                <button id="load-more-btn" onclick="loadMoreComments()">Load More</button>
+                                <button id="load-less-btn" onclick="loadLessComments()">Load Less</button>
+                                {% if user.is_authenticated %}
+                                <div class="title">
+                                    <h3>Make a new comment</h3>
+                                </div>
+                                <div class="card">
+                                    <form id="commentform" class="commentform" method="post">
+                                        <h2>Comment Now!</h2>
+                                        <select name="post" class="d-none" id="post_id">
+                                            <option value="{{ post.id }}" selected="{{ post.id }}"></option>
+                                        </select>
+                                        <label class="small font-weight-bold">{{ comment_form.parent.label}}</label>
+                                        {{ comment_form.parent }}
+                                        {{ comment_form.content }}
+                                        <div class="rate">
+                                            <input type="radio" id="star5" name="rate" value="5" />
+                                            <label for="star5" >5 stars</label>
+                                            <input type="radio" id="star4" name="rate" value="4" />
+                                            <label for="star4" >4 stars</label>
+                                            <input type="radio" id="star3" name="rate" value="3" />
+                                            <label for="star3" >3 stars</label>
+                                            <input type="radio" id="star2" name="rate" value="2" />
+                                            <label for="star2" >2 stars</label> 
+                                            <input type="radio" id="star1" name="rate" value="1" />
+                                            <label for="star1" >1 star</label>
+                                        </div>
+                                        <input class="d-none" type="radio" id="star1" name="rate" value="0" checked />
+                                        {% csrf_token %}
+                                        <button value="commentform" id="newcomment" type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Footer -->
+    <footer class="footer section">
+        <div class="footer-container container d-grid">
+            
+            <div class="company-data">
+                <a href="./index.html">
+                    <h2 class="logo">Blogs</h2>
+                </a>
+                <p class="company-description">"Words have the power to inspire, create, and transform. In the vast landscape of the internet, let your blog be a beacon of insight and a source of positive influence. Craft your words with care, for in each sentence lies the potential to resonate with a reader and spark a meaningful connection."</p>
+                <ul class="list social-media">
+                    <li class="list-item">
+                        <a href="#" class="list-link"><i class="x-far-thumbs-up"></i></a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link"><i class="ri-facebook-circle-line"></i></a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link"><i class="ri-twitter-line"></i></a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link"><i class="ri-pinterest-line"></i></a>
+                    </li>
+                </ul>
+                <span class="copyright-notice"></span>
+            </div>
+
+            <div>
+                <h6 class="title footer-title">Categories</h6>
+                
+                <ul class="footer-list list">
+                    <li class="list-item">
+                        <a href="/blog/category/travel/" class="list-link">Travel</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/blog/category/food/" class="list-link">Food</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/blog/category/Technology/" class="list-link">Technology</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/blog/category/health/" class="list-link">Health</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/blog/category/nature/" class="list-link">Nature</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="/blog/category/fitness" class="list-link">Fitness</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div>
+                <h6 class="title footer-title">Useful links</h6>
+                
+                <ul class="footer-list list">
+                    <li class="list-item">
+                        <a href="{% url 'blog:homepage'%}" class="list-link">Home</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="{% url 'blog:all_blog' %}" class="list-link">all blogs</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="{% url 'store:all_products' %}" class="list-link">Store</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="{% url 'account:login' %}" class="list-link">login</a>
+                    </li>
+                </ul>
+
+            </div>
+
+            <div>
+                <h6 class="title footer-title">Company</h6>
+                <ul class="footer-list list">
+                    <li class="list-item">
+                        <a href="#" class="list-link">Contact us</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link">F.A.Q</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link">Careers</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link">Authors</a>
+                    </li>
+                    <li class="list-item">
+                        <a href="#" class="list-link">Memberships</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+
+        
+        $(document).on('click', '#newcomment, #newcommentinner', function (e) {
+            e.preventDefault();
+        
+            var button = $(this).attr("value");
+        
+            var placement = "commentform"
+            if (button == "newcommentform") {
+              var placement = "newcommentform"
+            }
+        
+            $.ajax({
+              type: 'POST',
+              url: '{% url "blog:addcomment" %}',
+              data: $("#" + button).serialize(),
+              cache: false,
+              success: function (json) {
+                console.log(json)
+                location.reload();
+        
+        
+                $('<div id="" class="my-2 p-2" style="border: 1px solid grey"> \
+                  <div class="d-flex justify-content-between">By ' + json['user_name'] + '<div></div>Posted: Just now!</div> \
+                  <div>' + json['result'] + '</div> \
+                  <hr> \
+                  </div>').insertBefore('#' + placement);
+        
+                $('.commentform').trigger("reset");
+                formExit()
+        
+              },
+              error: function (xhr, errmsg, err) {
+        
+              }
+            });
+        })
+
+        function deleteComment(id) {
+            console.log(id)
+            $.ajax({
+              type: 'POST',
+              url: '{% url "blog:addcomment" %}',
+              data: {
+                nodeid: id,
+                action: 'delete',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+              },
+              success: function (json) {
+                $("#" + json['remove']).remove();
+                location.reload();
+              },
+              error: function (xhr, errmsg, err) {}
+            });
+        }
+
+
+
+
+
+
+        function formExit() {
+            document.getElementById("newcommentform").remove();
+        }
+
+        function myFunction(id) {
+            var a = document.getElementById(id);
+
+            if (document.contains(document.getElementById("newcommentform"))) {
+                document.getElementById("newcommentform").remove();
+            }
+
+            
+            a.insertAdjacentHTML('afterend', 
+                    '<form id="newcommentform" class="commentform" method="post">\
+                        <h2>Reply Now!</h2>\
+                        {% csrf_token %} \
+                        <label class="small font-weight-bold"></label>\
+                        <select name="post" class="d-none" id="post_id">\
+                            <option value="{{ post.id }}" selected="{{ post.id }}"></option>\
+                        </select>\
+                        <select name="parent" class="d-none" id="id_parentT"> \
+                            <option value="' + id + '" selected="' + id + '"></option> \
+                        </select> \
+                        <textarea class="form-control" name="content" rows="2" required="" id="id_content"></textarea>\
+                        <div class="rate">\
+                            <input type="radio" id="star5" name="rate" value="5" />\
+                            <label for="star5" >5 stars</label>\
+                            <input type="radio" id="star4" name="rate" value="4" />\
+                            <label for="star4" >4 stars</label>\
+                            <input type="radio" id="star3" name="rate" value="3" />\
+                            <label for="star3" >3 stars</label>\
+                            <input type="radio" id="star2" name="rate" value="2" />\
+                            <label for="star2" >2 stars</label> \
+                            <input type="radio" id="star1" name="rate" value="1" />\
+                            <label for="star1" >1 star</label>\
+                        </div>\
+                        <br>\
+                        <input class = "d-none" type="radio" id="star1" name="rate" value="0" checked />\
+                        {% csrf_token %} \
+                        <button type="button" class="btn btn-outline-secondary" onclick="formExit()">Close</button> \
+                        <button value="newcommentform" id="newcommentinner" type="submit" class="btn btn-primary btn-sm">Submit</button>\
+                    </form>');
+        }
+        $('.commentform').trigger("reset");
+        $('#myForm').trigger("reset");
+    </script>
+
+    <script>
+        const body = document.body;
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const currentTheme = localStorage.getItem('currentTheme');
+
+    // Check to see if there is a theme preference in localStorage, if so add the theme to the body
+    if (currentTheme) {
+        body.classList.add(currentTheme);
+    }
+
+    themeToggleBtn.addEventListener('click', function () {
+        // Toggle between light and dark themes on click
+        body.classList.toggle('light-theme');
+        body.classList.toggle('dark-theme');
+
+        // Get the div with id "nissan_nismo"
+        const targetDiv = document.getElementById('nissan_nismo');
+        const card = document.querySelector('.card');
+
+        // Check if the body has the class of light theme
+        if (body.classList.contains('light-theme')) {
+            localStorage.setItem('currentTheme', 'light-theme');
+            targetDiv.classList.add('light-theme');
+            targetDiv.classList.remove('dark-theme');
+            card.style.backgroundColor = '#fff';
+            card.style.color = '#3d3d3d';
+        } else {
+            localStorage.setItem('currentTheme', 'dark-theme');
+            targetDiv.classList.add('dark-theme');
+            targetDiv.classList.remove('light-theme');
+            card.style.backgroundColor = '#000';
+            card.style.color = '#fff';
+        }
+    });
+    </script>
+    <script>
+        let visibleComments = 4; // Number of comments to initially display
+        let comments = document.querySelectorAll('.d-flex.flex-row.p-3');
+    
+        function showComments(start, end) {
+            for (let i = 0; i < comments.length; i++) {
+                if (i >= start && i < end) {
+                    comments[i].style.display = 'block';
+                } else {
+                    comments[i].style.display = 'none';
+                }
+            }
+        }
+    
+        function loadMoreComments() {
+            visibleComments += 4; // Increase the number of visible comments
+            showComments(0, visibleComments);
+    
+            // Show the "Load Less" button when comments are loaded
+            document.getElementById('load-less-btn').style.display = visibleComments > 4 ? 'inline-block' : 'none';
+    
+            // Hide the "Load More" button if all comments are visible
+            if (visibleComments >= comments.length) {
+                document.getElementById('load-more-btn').style.display = 'none';
+            }
+        }
+    
+        function loadLessComments() {
+            visibleComments -= 4; // Decrease the number of visible comments
+            if (visibleComments <= 4) {
+                visibleComments = 4; // Ensure there are at least 4 comments visible
+                document.getElementById('load-less-btn').style.display = 'none';
+            }
+            showComments(0, visibleComments);
+    
+            // Show the "Load More" button when comments are loaded
+            document.getElementById('load-more-btn').style.display = 'inline-block';
+        }
+    
+        // Initial setup to show the first batch of comments
+        document.addEventListener('DOMContentLoaded', function () {
+            showComments(0, visibleComments);
+    
+            // Hide the "Load Less" button initially if there are 4 or fewer comments
+            document.getElementById('load-less-btn').style.display = comments.length > 4 ? 'none' : 'none';
+    
+            // Hide the "Load More" button if all comments are visible initially
+            if (visibleComments >= comments.length) {
+                document.getElementById('load-more-btn').style.display = 'none';
+            }
+        });
+    </script>
+    <script>
+        // Get the search bar element by ID
+        const searchBar = document.getElementById('search-bar');
+    
+        // Your existing code for opening and closing the search form
+        const searchContainer = document.getElementById('search-form-container');
+        const searchIcon = document.getElementById('search-icon');
+        const formCloseBtn = document.getElementById('form-close-btn');
+    
+        searchIcon.addEventListener('click', () => searchContainer.classList.add('activated'));
+        formCloseBtn.addEventListener('click', () => searchContainer.classList.remove('activated'));
+    
+        // Close the search form popup on ESC keypress
+        window.addEventListener('keyup', (event) => {
+            if (event.key === 'Escape') searchContainer.classList.remove('activated');
+        });
+    </script>
+    <style>
+        .gradient-custom { /* fallback for old browsers */ background: #4facfe; /* Chrome 10-25,
+                Safari 5.1-6 */ background: -webkit-linear-gradient(to bottom right, rgba(79, 172, 254,
+                1), rgba(0, 242, 254, 1)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+,
+                Safari 7+ */ background: linear-gradient(to bottom right, rgba(79, 172, 254, 1), rgba(0,
+                242, 254, 1)) }
+    
+        .children form {
+                margin-left: -48px;
+         }
+    
+        .children .children form {
+                margin-left: -48px;
+        }
+          
+          /* Center the content */
+        .height {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+        }
+          
+          /* Card Style */
+        .card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 60%;
+            margin: 0 auto;
+        }
+          
+        .card h1 {
+              font-size: 24px;
+              margin-bottom: 20px;
+              color: #333;
+        }
+          
+          /* Comments Styling */
+        .comment-text {
+              font-size: 16px;
+              margin: 0;
+              color: #333;
+        }
+          
+          /* User Feed */
+        .user-feed {
+              display: flex;
+              align-items: center;
+              margin-top: 10px;
+        }
+          
+        .user-feed i {
+              margin-right: 5px;
+              color:green;
+        }
+          
+    
+          /* Reply Button */
+        .btn-primary {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 5px 10px; /* Reduced padding for smaller button */
+            cursor: pointer;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        
+        /* Comment Spacing */
+        .card .d-flex:not(.user-feed) {
+            margin-left: 20px; /* Add left margin for nested comments */
+        }
+          
+        .btn-primary:hover {
+              background-color: #0056b3;
+        }
+          
+          /* Delete Button */
+        .btn-secondary {
+              background-color: #6c757d;
+              color: #fff;
+              border: none;
+              padding: 5px 10px;
+              cursor: pointer;
+              margin-top: 10px;
+        }
+          
+        .btn-secondary:hover {
+              background-color: #545b62;
+        }
+          
+          /* Pagination */
+        .pagination {
+              margin-top: 10px;
+        }
+          
+        .pagination a {
+              text-decoration: none;
+              color: #007BFF;
+              padding: 5px 10px;
+              border: 1px solid #ccc;
+        }
+          
+        .pagination a:hover {
+              background-color: #007BFF;
+              color: #fff;
+        }
+          
+        .pagination .page-item.active .page-link {
+              background-color: #007BFF;
+              color: #fff;
+        }
+          
+          /* New Comment Form */
+        .commentform {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              padding: 20px;
+              border-radius: 10px;
+              width: 60%;
+              margin: 20px auto;
+        }
+          
+        .commentform h2 {
+              font-size: 20px;
+              color: #333;
+              margin-bottom: 20px;
+        }
+          
+        .commentform select, .commentform label, .commentform textarea {
+              margin: 10px 0;
+        }
+          
+          
+        .commentform button {
+              border: none;
+              padding: 10px 20px;
+              cursor: pointer;
+              margin-top: 10px;
+              border-radius: 5px;
+        }
+          
+        .commentform button:hover {
+              background-color: #0056b3;
+        }
+        
+        /* Adjust image dimensions if needed */
+          .card img {
+            border-radius: 50%; /* Makes images circular */
+          }
+        
+        /* Adjust image dimensions if needed */
+        .card img {
+            width: 40px;
+            height: 40px;
+        }
+          
+        .d-none {
+            display: none !important;
+        }
+        .card .d-flex {
+            margin-top: 10px; /* Adjust the margin as needed */
+        }
+        .card .d-flex:not(.user-feed) {
+            margin-left: 60px; /* Add left margin for nested comments */
+        }
+        
+        
+        /* Apply text colors to h1 to h3 */
+        .card h1,
+        .card h2,
+        .card h3 {
+            color: inherit;
+        }
+    
+        .title {
+            text-align: center; /* Center the text within the div */
+        }
+        
+        .title h3 {
+            font-size: 24px; /* Adjust the font size as needed */
+            margin: 0; /* Remove default margin to ensure precise centering */
+            padding:20px;
+        }
+        
+        .pagination {
+            display: inline-block;
+            margin: 0;
+        }
+        
+        .pagination li {
+            list-style: none;
+            display: inline-block;
+            margin-right: 5px; /* Adjust margin between pagination items if needed */
+        }
+        
+        .pagination li.active span {
+            background-color: #007bff; /* Optional: Change the background color of the active page */
+            color: #fff; /* Optional: Change the text color of the active page */
+            padding: 6px 12px; /* Optional: Adjust padding for better styling */
+            border-radius: 4px; /* Optional: Add border-radius for rounded corners */
+        }
+        
+        #pagination-container {
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        .pagination-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        
+        .pagination-btn:hover {
+            background-color: #45a049;
+        }
+    
+        .next-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+         
+        #comments-container {
+            border: 1px solid #ddd; /* Add a border */
+            border-radius: 8px; /* Add border radius for rounded corners */
+            padding: 20px; /* Add padding to the comments container */
+            margin-bottom: 20px; /* Add margin to separate it from other elements */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle box shadow */
+        }
+    
+        .d-flex.flex-row.p-3 {
+            display: none; /* Initially hide all comments */
+            margin-bottom: 15px; /* Add margin between comments */
+        }
+    
+        #load-more-btn {
+            background-color: #007bff; /* Blue background color for the button */
+            color: #fff; /* White text color */
+            border: none; /* Remove button border */
+            padding: 10px 15px; /* Add padding to the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+            border-radius: 5px; /* Add border radius for rounded button corners */
+        }
+    
+        #load-more-btn:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+        #load-less-btn {
+            background-color: #dc3545; /* Red background color for the button */
+            color: #fff; /* White text color */
+            border: none; /* Remove button border */
+            padding: 10px 15px; /* Add padding to the button */
+            cursor: pointer; /* Add pointer cursor on hover */
+            border-radius: 5px; /* Add border radius for rounded button corners */
+            display: none; /* Hide the button initially */
+        }
+    
+        #load-less-btn:hover {
+            background-color: #c82333; /* Darker red on hover */
+        }
+        </style> 
+        <style>
+            .rating-star i{
+                color: green; !important;
+            }
+
+            
+            
+            .form-color{
+              
+               background-color: #fafafa;
+            
+            }
+            
+            .form-control{
+            
+                height: 48px;
+                border-radius: 35px;
+            }
+            
+            .form-control:focus {
+                color: #495057;
+                background-color: #fff;
+                border-color: #35b69f;
+                outline: 0;
+                box-shadow: none;
+                text-indent: 10px;
+            }
+            
+            .c-badge{
+                background-color: #35b69f;
+                color: white;
+                height: 20px;
+                font-size: 11px;
+                width: 92px;
+                border-radius: 5px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-top: 2px;
+            }
+            
+            .comment-text{
+                font-size: 13px;
+            }
+            
+            .wish{
+            
+                color:#35b69f;
+            }
+            
+            .children form {
+                margin-left: -48px;
+            }
+            *{
+                margin: 0;
+                padding: 0;
+            }
+            .rate {
+                float: left;
+                height: 46px;
+                padding: 0 10px;
+            }
+            .rate:not(:checked) > input {
+                position:absolute;
+                top:-9999px;
+            }
+            .rate:not(:checked) > label {
+                float:right;
+                width:1em;
+                overflow:hidden;
+                white-space:nowrap;
+                cursor:pointer;
+                font-size:30px;
+                color:#ccc;
+            }
+            .rate:not(:checked) > label:before {
+                content: '★ ';
+            }
+            .rate > input:checked ~ label {
+                color: #ffc700;    
+            }
+            .rate:not(:checked) > label:hover,
+            .rate:not(:checked) > label:hover ~ label {
+                color: #deb217;  
+            }
+            .rate > input:checked + label:hover,
+            .rate > input:checked + label:hover ~ label,
+            .rate > input:checked ~ label:hover,
+            .rate > input:checked ~ label:hover ~ label,
+            .rate > label:hover ~ input:checked ~ label {
+                color: #c59b08;
+            }
+            .rate input {
+                display: none;
+            }
+            .rating {
+                --dir: right;
+                --fill: gold;
+                --fillbg: rgba(100, 100, 100, 0.15);
+                --heart: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 21.328l-1.453-1.313q-2.484-2.25-3.609-3.328t-2.508-2.672-1.898-2.883-0.516-2.648q0-2.297 1.57-3.891t3.914-1.594q2.719 0 4.5 2.109 1.781-2.109 4.5-2.109 2.344 0 3.914 1.594t1.57 3.891q0 1.828-1.219 3.797t-2.648 3.422-4.664 4.359z"/></svg>');
+                --star: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 17.25l-6.188 3.75 1.641-7.031-5.438-4.734 7.172-0.609 2.813-6.609 2.813 6.609 7.172 0.609-5.438 4.734 1.641 7.031z"/></svg>');
+                --stars: 5;
+                --starsize: 3rem;
+                --symbol: var(--star);
+                --value: 1;
+                --w: calc(var(--stars) * var(--starsize));
+                --x: calc(100% * (var(--value) / var(--stars)));
+                block-size: var(--starsize);
+                inline-size: var(--w);
+                position: relative;
+                touch-action: manipulation;
+                -webkit-appearance: none;
+              }
+              [dir="rtl"] .rating {
+                --dir: left;
+              }
+              .rating::-moz-range-track {
+                background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+                block-size: 100%;
+                mask: repeat left center/var(--starsize) var(--symbol);
+              }
+              .rating::-webkit-slider-runnable-track {
+                background: linear-gradient(to var(--dir), var(--fill) 0 var(--x), var(--fillbg) 0 var(--x));
+                block-size: 100%;
+                mask: repeat left center/var(--starsize) var(--symbol);
+                -webkit-mask: repeat left center/var(--starsize) var(--symbol);
+              }
+              .rating::-moz-range-thumb {
+                height: var(--starsize);
+                opacity: 0;
+                width: var(--starsize);
+              }
+              .rating::-webkit-slider-thumb {
+                height: var(--starsize);
+                opacity: 0;
+                width: var(--starsize);
+                -webkit-appearance: none;
+              }
+              .rating, .rating-label {
+                display: block;
+                font-family: ui-sans-serif, system-ui, sans-serif;
+              }
+              .rating-label {
+                margin-block-end: 1rem;
+              }
+              
+              /* NO JS */
+              .rating--nojs::-moz-range-track {
+                background: var(--fillbg);
+              }
+              .rating--nojs::-moz-range-progress {
+                background: var(--fill);
+                block-size: 100%;
+                mask: repeat left center/var(--starsize) var(--star);
+              }
+              .rating--nojs::-webkit-slider-runnable-track {
+                background: var(--fillbg);
+              }
+              .rating--nojs::-webkit-slider-thumb {
+                background-color: var(--fill);
+                box-shadow: calc(0rem - var(--w)) 0 0 var(--w) var(--fill);
+                opacity: 1;
+                width: 1px;
+              }
+              [dir="rtl"] .rating--nojs::-webkit-slider-thumb {
+                box-shadow: var(--w) 0 0 var(--w) var(--fill);
+              }
+              :root {
+                --star-color: green; /* Set the default color to green */
+            }
+            .dropdown {
+                list-style: none;
+            }
+            
+            .list-item a {
+                cursor: pointer;
+                text-decoration: none;
+            }
+            
+            .dropdown-menu {
+                display: none;
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                position: absolute;
+                z-index: 1;
+            }
+            
+            .dropdown-item {
+                padding: 10px;
+                color: #333;
+                text-decoration: none;
+                transition: background-color 0.3s;
+            }
+            
+            .dropdown-item a {
+                color: #333;
+                text-decoration: none;
+                display: block;
+            }
+            
+            .dropdown-item:hover {
+                background-color: #f5f5f5;
+            }
+
+              
+        </style>
+        <style>
+            .rating-star {
+              display: flex;
+              align-items: center;
+            }
+        
+            .star-rating {
+              font-size: 24px;
+              color: #ffd700; /* Set the color of the stars */
+            }
+        
+            .fa-star-half-o::before {
+              content: '\f123'; /* Unicode character for half star (adjust if necessary) */
+            }
+        
+            .fa-star-o::before {
+              content: '\f006'; /* Unicode character for empty star (adjust if necessary) */
+            }
+        
+            h3 {
+              margin-right: 10px;
+            }
+          </style>
+        <script>
+            function toggleCategoriesDropdown() {
+                var categoriesList = document.getElementById("categoriesList");
+                categoriesList.style.display = (categoriesList.style.display === "block") ? "none" : "block";
+            }
+        </script>
+        <script>
+            $(document).ready(function () {
+                console.log('Script is executing for blog search.'); // Debugging
+        
+                $('#blog-search-box').on('input', function () {
+                    var query = $(this).val();
+        
+                    // Clear previous suggestions
+                    $('#blog-suggestions-list').empty();
+        
+                    // Make an AJAX request only if the query is not empty
+                    if (query.trim() !== '') {
+                        // Get the form data with CSRF token
+                        var formData = $('#blog-search-form').serialize();
+        
+                        // Make an AJAX request
+                        $.ajax({
+                            type: 'POST',
+                            url: '{% url "blog:post_search" %}',
+                            data: formData,
+                            success: function (data) {
+                                console.log('Received data from server:', data); // Debugging
+        
+                                // Display the suggestions
+                                var suggestionsList = $('#blog-suggestions-list');
+                                $.each(data.suggestions, function (index, suggestion) {
+                                    var listItem = $('<li class="dropdown-item">' + suggestion.title + '</li>');
+                                    suggestionsList.append(listItem);
+        
+                                    // Handle click on suggestion
+                                    listItem.on('click', function () {
+                                        // Fill the search box with the clicked suggestion
+                                        $('#blog-search-box').val(suggestion.title);
+        
+                                        // Hide the suggestions container
+                                        $('#blog-suggestions-container').hide();
+                                    });
+                                });
+        
+                                // Show the suggestions container
+                                $('#blog-suggestions-container').show();
+                            },
+                            error: function (error) {
+                                console.log('Error in AJAX request:', error); // Debugging
+                            }
+                        });
+                    } else {
+                        // Hide the suggestions container if the query is empty
+                        $('#blog-suggestions-container').hide();
+                    }
+                });
+            });
+        </script>
+
+    <!-- Swiper.js -->
+    <!-- Custom script -->
+        <script src="{% static 'JS/main.js' %}"></script>
+</body>
+</html>
